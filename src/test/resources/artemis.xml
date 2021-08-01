@@ -1,0 +1,32 @@
+<artemis>
+	<vars>
+		<var name="cell" value="09${_.generate(9, '0'..'9')}"/>
+		<var name="firstName" value="${_.generate(4, 'a'..'z')}"/>
+		<var name="lastName" value="${_.generate(4, 'a'..'z')}"/>
+		<var name="password" value="${_.generate(9, '0'..'9', 'a'..'z')}"/>
+	</vars>
+
+	<scenario name="RegisterRestaurateur">
+		<get id="regCode" url="/api/registrations/${cell}">
+			<assertRs status="200" type="text"/>
+		</get>
+
+		<get id="regCodeDev" url="/api/j4d/registrations/${cell}">
+			<assertRs status="200" type="json" properties="code"/>
+		</get>
+
+		<post id="register" url="/api/registrations">
+			<body><![CDATA[
+{
+    "firstName": "${firstName}",
+    "lastName": "${lastName}",
+    "cell": "${cell}",
+    "code": "${regCodeDev.rs.code}",
+    "password": "${password}"
+}
+            ]]></body>
+
+			<assertRs status="200" type="text"/>
+		</post>
+	</scenario>
+</artemis>

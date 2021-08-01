@@ -15,25 +15,18 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class RestaurateurController {
-	private final IRestaurateurService personService;
+	private final IRestaurateurService restaurateurService;
 
 	@GetMapping("/registrations/{cell}")
 	public ResponseEntity<Void> sendRegistrationCode(@PathVariable String cell) {
 		log.info("Start Registrations: cell=[{}]", cell);
-		personService.sendRegistrationCode(cell);
+		restaurateurService.sendRegistrationCode(cell);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("/registrations")
 	public ResponseEntity<Void> register(@Valid @RequestBody RestaurateurDTO.RegisterRq registerRq) {
-		personService.register(registerRq);
+		restaurateurService.register(registerRq);
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	//TODO JUST for DEV
-	@GetMapping("/_dev_/registrations/{cell}")
-	public ResponseEntity<RestaurateurDTO.RegistrationCodeRs> getRegistrationCode(@PathVariable String cell) {
-		log.info("Start Registrations: cell=[{}]", cell);
-		return ResponseEntity.ok(new RestaurateurDTO.RegistrationCodeRs(personService.getRegistrationCode(cell)));
 	}
 }

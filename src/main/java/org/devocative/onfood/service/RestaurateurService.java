@@ -2,27 +2,32 @@ package org.devocative.onfood.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.devocative.onfood.OnFoodException;
 import org.devocative.onfood.dto.RestaurateurDTO;
 import org.devocative.onfood.error.RestaurateurErrorCode;
 import org.devocative.onfood.iservice.BeanMapper;
 import org.devocative.onfood.iservice.IRestaurateurService;
+import org.devocative.onfood.repository.RestaurateurRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class RestaurateurService implements IRestaurateurService {
 	private final BeanMapper beanMapper;
+	private final RestaurateurRepository restaurateurRepository;
 
 	// ---------------
 
 	// TODO replace with Redis
-	private final Map<String, String> sentRegistrationCodes = new ConcurrentHashMap<>();
+	private final Map<String, String> sentRegistrationCodes =
+		Collections.synchronizedMap(new PassiveExpiringMap<>(30_000));
 	private final Random random = new Random();
 
 	// ------------------------------
@@ -33,11 +38,15 @@ public class RestaurateurService implements IRestaurateurService {
 		//TODO need send code via SMS
 	}
 
+	@Transactional
 	@Override
 	public void register(RestaurateurDTO.RegisterRq registerRq) {
 		if (registerRq.getCode().equals(sentRegistrationCodes.get(registerRq.getCell()))) {
-			final var person = beanMapper.toRestaurateur(registerRq);
-			log.info("Registering Person: {}", person);
+			sentRegistrationCodes.remove(registerRq.getCell());
+
+			final var restaurateur = beanMapper.toRestaurateur(registerRq);
+			restaurateurRepository.saveAndFlush(restaurateur);
+			log.info("Registered Restaurateur: {}", restaurateur);
 		} else {
 			throw new OnFoodException(RestaurateurErrorCode.UnregisteredCellOrInvalidCode);
 		}

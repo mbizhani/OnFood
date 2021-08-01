@@ -14,7 +14,7 @@ import static org.devocative.onfood.model.Food.UC_MAIN;
 @Table(name = "t_food", uniqueConstraints = {
 	@UniqueConstraint(name = UC_MAIN, columnNames = {"f_restaurant", "c_name"})
 })
-public class Food {
+public class Food extends Auditable {
 	public static final String UC_MAIN = "uc_food_main";
 
 	// ------------------------------
