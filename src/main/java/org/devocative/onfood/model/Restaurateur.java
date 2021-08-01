@@ -2,20 +2,22 @@ package org.devocative.onfood.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
-import static org.devocative.onfood.model.Person.UC_MAIN;
+import static org.devocative.onfood.model.Restaurateur.UC_MAIN;
 
 
 @Getter
 @Setter
+@ToString(of = {"firstName", "lastName", "cell"})
 @Entity
-@Table(name = "t_person", uniqueConstraints = {
+@Table(name = "t_restaurateur", uniqueConstraints = {
 	@UniqueConstraint(name = UC_MAIN, columnNames = "c_cell")
 })
-public class Person {
-	public static final String UC_MAIN = "uc_person_main";
+public class Restaurateur {
+	public static final String UC_MAIN = "uc_restaurateur_main";
 
 	// ------------------------------
 
