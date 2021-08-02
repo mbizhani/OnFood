@@ -1,4 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE artemis PUBLIC "-//Devocative.Org//Artemis 1.0//EN"
+		"https://devocative.org/dtd/artemis-1.0.dtd">
+
 <artemis>
+
 	<vars>
 		<var name="cell" value="09${_.generate(9, '0'..'9')}"/>
 		<var name="firstName" value="${_.generate(4, 'a'..'z')}"/>
@@ -7,26 +13,51 @@
 	</vars>
 
 	<scenario name="RegisterRestaurateur">
-		<get id="regCode" url="/api/registrations/${cell}">
-			<assertRs status="200" type="text"/>
+		<get url="/restaurateurs/registrations/${cell}">
+			<assertRs status="200" body="empty"/>
 		</get>
 
-		<get id="regCodeDev" url="/api/j4d/registrations/${cell}">
-			<assertRs status="200" type="json" properties="code"/>
+		<get url="/j4d/registrations/${cell}">
+			<assertRs status="200" properties="code"/>
 		</get>
 
-		<post id="register" url="/api/registrations">
+		<post url="/restaurateurs/registrations" id="register">
 			<body><![CDATA[
 {
     "firstName": "${firstName}",
     "lastName": "${lastName}",
     "cell": "${cell}",
-    "code": "${regCodeDev.rs.code}",
+    "code": "${_prev.rs.code}",
     "password": "${password}"
 }
             ]]></body>
 
-			<assertRs status="200" type="text"/>
+			<assertRs status="200" body="empty"/>
 		</post>
 	</scenario>
+
+	<scenario name="RegisterRestaurateur-DuplicateError">
+		<get url="/restaurateurs/registrations/${cell}">
+			<assertRs status="200" body="empty"/>
+		</get>
+
+		<get url="/j4d/registrations/${cell}">
+			<assertRs status="200" properties="code"/>
+		</get>
+
+		<post url="/restaurateurs/registrations" id="register">
+			<body><![CDATA[
+{
+    "firstName": "${firstName}",
+    "lastName": "${lastName}",
+    "cell": "${cell}",
+    "code": "${_prev.rs.code}",
+    "password": "${password}"
+}
+            ]]></body>
+
+			<assertRs status="400" properties="userId,token"/>
+		</post>
+	</scenario>
+
 </artemis>

@@ -13,7 +13,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/restaurateurs")
 public class RestaurateurController {
 	private final IRestaurateurService restaurateurService;
 
