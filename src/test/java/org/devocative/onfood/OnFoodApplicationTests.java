@@ -12,8 +12,9 @@ class OnFoodApplicationTests {
 
 	@Test
 	void contextLoads() {
-		/*ArtemisExecutor executor = new ArtemisExecutor();
-		executor.execute();*/
+		/*ArtemisExecutor.run(new Config()
+			.setBaseUrl(String.format("http://localhost:%s", port))
+		);*/
 	}
 
 }

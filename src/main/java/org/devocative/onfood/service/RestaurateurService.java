@@ -6,9 +6,9 @@ import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.devocative.onfood.OnFoodException;
 import org.devocative.onfood.dto.RestaurateurDTO;
 import org.devocative.onfood.error.RestaurateurErrorCode;
-import org.devocative.onfood.iservice.BeanMapper;
+import org.devocative.onfood.iservice.IBeanMapper;
 import org.devocative.onfood.iservice.IRestaurateurService;
-import org.devocative.onfood.repository.RestaurateurRepository;
+import org.devocative.onfood.repository.IRestaurateurRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,8 +20,8 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Service
 public class RestaurateurService implements IRestaurateurService {
-	private final BeanMapper beanMapper;
-	private final RestaurateurRepository restaurateurRepository;
+	private final IBeanMapper beanMapper;
+	private final IRestaurateurRepository restaurateurRepository;
 
 	// ---------------
 

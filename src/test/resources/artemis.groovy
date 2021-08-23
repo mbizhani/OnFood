@@ -1,6 +1,6 @@
 import org.devocative.artemis.Context
 
-def init(Context ctx) {
+def before(Context ctx) {
 }
 
 def generate(int n, List<String>... alphaSet) {
