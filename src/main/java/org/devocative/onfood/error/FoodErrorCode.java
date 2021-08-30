@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RestaurateurErrorCode implements IErrorCode {
-	UnregisteredCellOrInvalidCode(400),
-	DuplicateCell(400);
+public enum FoodErrorCode implements IErrorCode {
+	DuplicateName(400);
 
 	// ------------------------------
 

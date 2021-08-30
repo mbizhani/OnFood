@@ -20,6 +20,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<d.mapstruct>1.4.2.Final</d.mapstruct>
+		<d.swagger.version>3.0.0</d.swagger.version>
 	</properties>
 
 	<dependencies>
@@ -82,6 +83,12 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${d.mapstruct}</version>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>${d.swagger.version}</version>
 		</dependency>
 
 		<dependency>

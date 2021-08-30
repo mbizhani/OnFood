@@ -56,7 +56,7 @@
 }
             ]]></body>
 
-			<assertRs status="400" properties="userId,token"/>
+			<assertRs status="400" properties="code,description,fields"/>
 		</post>
 	</scenario>
 

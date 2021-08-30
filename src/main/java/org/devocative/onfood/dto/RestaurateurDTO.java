@@ -4,22 +4,22 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public abstract class RestaurateurDTO {
 
 	@Getter
 	@Setter
 	public static class RegisterRq {
-		@NotEmpty
+		@NotNull
 		private String firstName;
-		@NotEmpty
+		@NotNull
 		private String lastName;
-		@NotEmpty
+		@NotNull
 		private String cell;
-		@NotEmpty
+		@NotNull
 		private String code;
-		@NotEmpty
+		@NotNull
 		private String password;
 	}
 

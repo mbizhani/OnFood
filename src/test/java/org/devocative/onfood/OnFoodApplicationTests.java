@@ -13,7 +13,7 @@ class OnFoodApplicationTests {
 	@Test
 	void contextLoads() {
 		/*ArtemisExecutor.run(new Config()
-			.setBaseUrl(String.format("http://localhost:%s", port))
+			.setBaseUrl(String.format("http://localhost:%s/api", port))
 		);*/
 	}
 
