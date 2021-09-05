@@ -8,6 +8,7 @@ import org.devocative.onfood.dto.RestaurateurDTO;
 import org.devocative.onfood.error.RestaurateurErrorCode;
 import org.devocative.onfood.iservice.IBeanMapper;
 import org.devocative.onfood.iservice.IRestaurateurService;
+import org.devocative.onfood.model.Restaurateur;
 import org.devocative.onfood.repository.IRestaurateurRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,15 @@ public class RestaurateurService implements IRestaurateurService {
 	private final Random random = new Random();
 
 	// ------------------------------
+
+	@Override
+	public RestaurateurDTO.RestaurateurRs getRestaurateur(Long id) {
+		final Restaurateur restaurateur = restaurateurRepository
+			.findById(id)
+			.orElseThrow(() -> new OnFoodException(RestaurateurErrorCode.RestaurateurNotFound, id.toString()));
+
+		return beanMapper.toRestaurateurRs(restaurateur);
+	}
 
 	@Override
 	public void sendRegistrationCode(String cell) {

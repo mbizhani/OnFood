@@ -29,4 +29,9 @@ public class RestaurateurController {
 		restaurateurService.register(registerRq);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<RestaurateurDTO.RestaurateurRs> getRestaurateur(@PathVariable Long id) {
+		return ResponseEntity.ok(restaurateurService.getRestaurateur(id));
+	}
 }

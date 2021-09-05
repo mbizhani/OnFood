@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum RestaurateurErrorCode implements IErrorCode {
+	RestaurateurNotFound(404),
 	UnregisteredCellOrInvalidCode(400),
 	DuplicateCell(400);
 

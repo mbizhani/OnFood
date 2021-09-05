@@ -34,6 +34,11 @@
 
 			<assertRs status="200" body="empty"/>
 		</post>
+
+		<get url="/restaurateurs/1">
+			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
+		</get>
+
 	</scenario>
 
 	<scenario name="RegisterRestaurateur-DuplicateError">
