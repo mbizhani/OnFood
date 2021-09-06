@@ -28,7 +28,7 @@ public class CalendarService implements ICalendarService {
 
 	@Override
 	public CalendarDTO.DateTimeDTO toDateTimeDTO(Date date) {
-		final Calendar c = Calendar.getInstance(getTimeZone(), getLocale());
+		final Calendar c = createCalendar();
 		c.setTime(date);
 
 		return new CalendarDTO.DateTimeDTO(
@@ -42,7 +42,7 @@ public class CalendarService implements ICalendarService {
 
 	@Override
 	public Date toDate(CalendarDTO.DateTimeDTO dto) {
-		final Calendar c = Calendar.getInstance(getTimeZone(), getLocale());
+		final Calendar c = createCalendar();
 		c.set(Calendar.YEAR, dto.getYear());
 		c.set(Calendar.MONTH, dto.getMonth() - 1);
 		c.set(Calendar.DAY_OF_MONTH, dto.getDay());
@@ -55,7 +55,7 @@ public class CalendarService implements ICalendarService {
 
 	@Override
 	public CalendarDTO.DateDTO toDateDTO(Date date) {
-		final Calendar c = Calendar.getInstance(getTimeZone(), getLocale());
+		final Calendar c = createCalendar();
 		c.setTime(date);
 
 		return new CalendarDTO.DateDTO(
@@ -66,7 +66,7 @@ public class CalendarService implements ICalendarService {
 
 	@Override
 	public Date toDate(CalendarDTO.DateDTO dto) {
-		final Calendar c = Calendar.getInstance(getTimeZone(), getLocale());
+		final Calendar c = createCalendar();
 		c.set(Calendar.YEAR, dto.getYear());
 		c.set(Calendar.MONTH, dto.getMonth() - 1);
 		c.set(Calendar.DAY_OF_MONTH, dto.getDay());
@@ -79,13 +79,9 @@ public class CalendarService implements ICalendarService {
 
 	// ------------------------------
 
-	private TimeZone getTimeZone() {
-		return TimeZone.getDefault();
-	}
-
-	private ULocale getLocale() {
+	private Calendar createCalendar() {
 		//new ULocale("en_US@calendar=gregorian");
-		return PERSIAN_LOCALE;
+		return Calendar.getInstance(TimeZone.getDefault(), PERSIAN_LOCALE);
 	}
 
 }

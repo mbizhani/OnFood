@@ -31,12 +31,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -44,9 +39,12 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+
+		<!-- D A T A  &  D B -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<!--<dependency>
@@ -65,6 +63,9 @@
 			<artifactId>ojdbc8</artifactId>
 			<scope>runtime</scope>
 		</dependency>-->
+
+
+		<!-- U T I L -->
 
 		<dependency>
 			<groupId>com.ibm.icu</groupId>
@@ -97,6 +98,21 @@
 			<version>${d.swagger.version}</version>
 		</dependency>
 
+
+		<!-- S E C U R I T Y -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+
 		<!-- T E S T -->
 
 		<dependency>
@@ -111,16 +127,25 @@
 			<scope>test</scope>
 		</dependency>-->
 
-		<!--<dependency>
+		<dependency>
 			<groupId>org.devocative.artemis</groupId>
-			<artifactId>artemis</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<artifactId>artemis-core</artifactId>
+			<version>1.0</version>
 			<scope>test</scope>
-		</dependency>-->
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.devocative.artemis</groupId>
+				<artifactId>artemis-maven-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<baseUrl>http://localhost:8080/api</baseUrl>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

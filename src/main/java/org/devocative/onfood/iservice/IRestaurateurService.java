@@ -7,7 +7,7 @@ public interface IRestaurateurService {
 
 	void sendRegistrationCode(String cell);
 
-	void register(RestaurateurDTO.RegisterRq registerRq);
+	RestaurateurDTO.RegisterRs register(RestaurateurDTO.RegisterRq registerRq);
 
 	String getRegistrationCode(String cell);
 }

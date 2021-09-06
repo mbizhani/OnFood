@@ -32,10 +32,14 @@
 }
             ]]></body>
 
-			<assertRs status="200" body="empty"/>
+			<assertRs status="200" properties="userId,token"/>
 		</post>
 
 		<get url="/restaurateurs/1">
+			<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>
+
 			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
 		</get>
 

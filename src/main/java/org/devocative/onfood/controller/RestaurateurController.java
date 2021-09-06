@@ -25,9 +25,8 @@ public class RestaurateurController {
 	}
 
 	@PostMapping("/registrations")
-	public ResponseEntity<Void> register(@Valid @RequestBody RestaurateurDTO.RegisterRq registerRq) {
-		restaurateurService.register(registerRq);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<RestaurateurDTO.RegisterRs> register(@Valid @RequestBody RestaurateurDTO.RegisterRq registerRq) {
+		return ResponseEntity.ok(restaurateurService.register(registerRq));
 	}
 
 	@GetMapping("/{id}")

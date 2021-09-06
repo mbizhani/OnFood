@@ -30,6 +30,14 @@ public abstract class RestaurateurDTO {
 
 	@Getter
 	@Setter
+	@RequiredArgsConstructor
+	public static class RegisterRs {
+		private final Long userId;
+		private final String token;
+	}
+
+	@Getter
+	@Setter
 	public static class RestaurateurRs extends RestaurateurDTO {
 		private Long id;
 		private String createdBy;
