@@ -35,7 +35,7 @@
 			<assertRs status="200" properties="userId,token"/>
 		</post>
 
-		<get url="/restaurateurs/1">
+		<get url="/restaurateurs/${register.rs.userId}">
 			<headers>
 				<header name="Authorization" value="${register.rs.token}"/>
 			</headers>
