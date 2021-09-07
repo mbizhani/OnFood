@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum RestaurateurErrorCode implements IErrorCode {
 	RestaurateurNotFound(404),
 	UnregisteredCellOrInvalidCode(400),
-	DuplicateCell(400);
+	DuplicateCell(400),
+	InvalidCellOrPassword(400);
 
 	// ------------------------------
 

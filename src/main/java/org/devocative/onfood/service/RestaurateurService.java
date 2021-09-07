@@ -12,9 +12,10 @@ import org.devocative.onfood.iservice.ISecurityService;
 import org.devocative.onfood.model.Restaurateur;
 import org.devocative.onfood.repository.IRestaurateurRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
@@ -26,6 +27,7 @@ public class RestaurateurService implements IRestaurateurService {
 	private final IBeanMapper beanMapper;
 	private final IRestaurateurRepository restaurateurRepository;
 	private final ISecurityService securityService;
+	private final PasswordEncoder passwordEncoder;
 
 	// ---------------
 
@@ -59,6 +61,7 @@ public class RestaurateurService implements IRestaurateurService {
 			sentRegistrationCodes.remove(registerRq.getCell());
 
 			final var restaurateur = beanMapper.toRestaurateur(registerRq);
+			restaurateur.setPassword(passwordEncoder.encode(registerRq.getPassword()));
 			restaurateurRepository.saveAndFlush(restaurateur);
 			log.info("Registered Restaurateur: {}", restaurateur);
 
@@ -69,6 +72,20 @@ public class RestaurateurService implements IRestaurateurService {
 					ISecurityService.RESTAURATEUR_ROLE));
 		} else {
 			throw new OnFoodException(RestaurateurErrorCode.UnregisteredCellOrInvalidCode);
+		}
+	}
+
+	@Override
+	public RestaurateurDTO.LoginRs login(RestaurateurDTO.LoginRq loginRq) {
+		final Restaurateur restaurateur = restaurateurRepository.findByCell(loginRq.getCell())
+			.orElseThrow(() -> new OnFoodException(RestaurateurErrorCode.InvalidCellOrPassword));
+
+		if (passwordEncoder.matches(loginRq.getPassword(), restaurateur.getPassword())) {
+			return new RestaurateurDTO.LoginRs(
+				restaurateur.getId(),
+				securityService.generateToken(loginRq.getCell(), restaurateur.getId(), ISecurityService.RESTAURATEUR_ROLE));
+		} else {
+			throw new OnFoodException(RestaurateurErrorCode.InvalidCellOrPassword);
 		}
 	}
 
