@@ -9,5 +9,7 @@ public interface IRestaurateurService {
 
 	RestaurateurDTO.RegisterRs register(RestaurateurDTO.RegisterRq registerRq);
 
+	RestaurateurDTO.LoginRs login(RestaurateurDTO.LoginRq loginRq);
+
 	String getRegistrationCode(String cell);
 }

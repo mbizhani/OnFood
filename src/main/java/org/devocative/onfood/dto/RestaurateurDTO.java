@@ -53,4 +53,22 @@ public abstract class RestaurateurDTO {
 	public static class RegistrationCodeRs {
 		private final String code;
 	}
+
+	@Getter
+	@Setter
+	public static class LoginRq {
+		@NotNull
+		private String cell;
+		@NotNull
+		private String password;
+	}
+
+	@Getter
+	@Setter
+	@RequiredArgsConstructor
+	public static class LoginRs {
+		private final Long userId;
+		private final String token;
+	}
+
 }

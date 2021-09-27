@@ -33,4 +33,9 @@ public class RestaurateurController {
 	public ResponseEntity<RestaurateurDTO.RestaurateurRs> getRestaurateur(@PathVariable Long id) {
 		return ResponseEntity.ok(restaurateurService.getRestaurateur(id));
 	}
+
+	@PostMapping("/logins")
+	public ResponseEntity<RestaurateurDTO.LoginRs> login(@Valid @RequestBody RestaurateurDTO.LoginRq loginRq) {
+		return ResponseEntity.ok(restaurateurService.login(loginRq));
+	}
 }
