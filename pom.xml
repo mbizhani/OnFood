@@ -130,7 +130,7 @@
 		<dependency>
 			<groupId>org.devocative.artemis</groupId>
 			<artifactId>artemis-core</artifactId>
-			<version>1.0</version>
+			<version>1.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -140,9 +140,10 @@
 			<plugin>
 				<groupId>org.devocative.artemis</groupId>
 				<artifactId>artemis-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>1.2</version>
 				<configuration>
 					<baseUrl>http://localhost:8080/api</baseUrl>
+					<devMode>true</devMode>
 				</configuration>
 			</plugin>
 

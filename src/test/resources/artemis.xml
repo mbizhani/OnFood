@@ -9,7 +9,7 @@
 		<var name="cell" value="09${_.generate(9, '0'..'9')}"/>
 		<var name="firstName" value="${_.generate(4, 'a'..'z')}"/>
 		<var name="lastName" value="${_.generate(4, 'a'..'z')}"/>
-		<var name="password" value="${_.generate(9, '0'..'9', 'a'..'z')}"/>
+		<!-- "password" is generated in before() -->
 	</vars>
 
 	<scenario name="RegisterRestaurateur">
@@ -32,7 +32,7 @@
 }
             ]]></body>
 
-			<assertRs status="200" properties="userId,token"/>
+			<assertRs status="200" properties="userId,token" call="true"/>
 		</post>
 
 		<get url="/restaurateurs/${register.rs.userId}">

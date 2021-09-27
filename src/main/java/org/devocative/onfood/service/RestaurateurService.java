@@ -31,7 +31,7 @@ public class RestaurateurService implements IRestaurateurService {
 
 	// TODO replace with Redis
 	private final Map<String, String> sentRegistrationCodes =
-		Collections.synchronizedMap(new PassiveExpiringMap<>(30_000));
+		Collections.synchronizedMap(new PassiveExpiringMap<>(30_000_000));
 	private final Random random = new Random();
 
 	// ------------------------------
