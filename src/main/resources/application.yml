@@ -2,13 +2,18 @@ spring:
   application:
     name: OnFood
   jpa:
-    database: h2
+    database: hsql
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
     show-sql: true
 
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:hsqldb:mem:test
     username: sa
-#    password: ""
+  #    password: ""
+
+  liquibase:
+    change-log: classpath:db/changelog/liquibase-master.xml
+    database-change-log-table: z_liq_changelog
+    database-change-log-lock-table: z_liq_changelog_lock

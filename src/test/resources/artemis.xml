@@ -43,6 +43,24 @@
 			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
 		</get>
 
+
+		<!-- Assert Unauthorized/Forbidden -->
+
+		<get url="/restaurateurs/${register.rs.userId - 1}">
+			<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>
+
+			<assertRs status="403" properties="timestamp,status,error,path"/>
+		</get>
+
+		<get url="/restaurateurs/${register.rs.userId}">
+			<assertRs status="401" properties="timestamp,status,error,path"/>
+		</get>
+
+		<get url="/restaurateurs/9999999999">
+			<assertRs status="401" properties="timestamp,status,error,path"/>
+		</get>
 	</scenario>
 
 	<scenario name="RegisterRestaurateur-DuplicateError">
