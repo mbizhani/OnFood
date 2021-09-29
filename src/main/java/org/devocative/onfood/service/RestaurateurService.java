@@ -38,7 +38,7 @@ public class RestaurateurService implements IRestaurateurService {
 
 	// ------------------------------
 
-	@PreAuthorize("hasAuthority('" + ISecurityService.RESTAURATEUR_ROLE + "') and #id == authentication.credentials")
+	@PreAuthorize("hasAuthority('" + ISecurityService.RESTAURATEUR_ROLE + "') and #id == authentication.userId")
 	@Override
 	public RestaurateurDTO.RestaurateurRs getRestaurateur(Long id) {
 		final Restaurateur restaurateur = restaurateurRepository

@@ -8,10 +8,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -24,16 +21,30 @@ public abstract class Auditable {
 	private Date createdDate;
 
 	@CreatedBy
-	@Column(name = "c_created_by", nullable = false, updatable = false)
-	private String createdBy;
+	@AttributeOverrides({
+		@AttributeOverride(
+			name = "userId",
+			column = @Column(name = "f_created_by_user_id", updatable = false, nullable = false)),
+		@AttributeOverride(
+			name = "username",
+			column = @Column(name = "c_created_by_username", updatable = false, nullable = false))
+	})
+	private AuditedUser createdBy;
 
 	@LastModifiedDate
-	@Column(name = "d_last_modified_date")
+	@Column(name = "d_last_modified_date", insertable = false)
 	private Date lastModifiedDate;
 
 	@LastModifiedBy
-	@Column(name = "c_last_modified_by")
-	private String lastModifiedBy;
+	@AttributeOverrides({
+		@AttributeOverride(
+			name = "userId",
+			column = @Column(name = "f_last_modified_by_user_id", insertable = false)),
+		@AttributeOverride(
+			name = "username",
+			column = @Column(name = "c_last_modified_by_username", insertable = false))
+	})
+	private AuditedUser lastModifiedBy;
 
 	@Version
 	@Column(name = "n_version", nullable = false)

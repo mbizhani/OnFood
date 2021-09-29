@@ -21,7 +21,7 @@
 			<assertRs status="200" properties="code"/>
 		</get>
 
-		<post url="/restaurateurs/registrations" id="register">
+		<post id="register" url="/restaurateurs/registrations">
 			<body><![CDATA[
 {
     "firstName": "${firstName}",
@@ -35,12 +35,14 @@
 			<assertRs status="200" properties="userId,token" call="true"/>
 		</post>
 
-		<get url="/restaurateurs/${register.rs.userId}">
+		<get id="profile" url="/restaurateurs/${register.rs.userId}">
 			<headers>
 				<header name="Authorization" value="${register.rs.token}"/>
 			</headers>
 
-			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
+			<assertRs status="200"
+			          properties="id,firstName,lastName,cell,createdBy,createdDate,lastModifiedBy,lastModifiedDate,version"
+			          call="true"/>
 		</get>
 
 

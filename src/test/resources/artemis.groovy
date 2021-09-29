@@ -1,27 +1,35 @@
 import org.devocative.artemis.Context
-import org.junit.jupiter.api.Assertions
+
+import static org.junit.jupiter.api.Assertions.*
 
 def before(Context ctx) {
-    def password = generate(5, 'a'..'z')
-    def encPass = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes())
-    ctx.addVar("password", encPass)
-    Artemis.log("Password: main=${password} enc=${encPass}")
+	def password = generate(5, 'a'..'z')
+	def encPass = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes())
+	ctx.addVar("password", encPass)
+	Artemis.log("Password: main=${password} enc=${encPass}")
 }
 
 def generate(int n, List<String>... alphaSet) {
-    def list = alphaSet.flatten()
-    new Random().with {
-        (1..n).collect { list[nextInt(list.size())] }.join()
-    }
+	def list = alphaSet.flatten()
+	new Random().with {
+		(1..n).collect { list[nextInt(list.size())] }.join()
+	}
 }
 
 // ------------------------------
 
 def assertRs_register(Context ctx, Map rsBody) {
-    Assertions.assertNotNull(ctx.vars.cell)
-    Assertions.assertNotNull(ctx.vars.firstName)
-    Assertions.assertNotNull(ctx.vars.lastName)
+	assertNotNull(rsBody.userId)
+	assertNotNull(rsBody.token)
+}
 
-    Assertions.assertNotNull(rsBody.userId)
-    Assertions.assertNotNull(rsBody.token)
+def assertRs_profile(Context ctx, Map rsBody) {
+	assertEquals(ctx.vars.firstName, rsBody.firstName)
+	assertEquals(ctx.vars.lastName, rsBody.lastName)
+	assertEquals(ctx.vars.cell, rsBody.cell)
+	assertEquals("anonymous", rsBody.createdBy)
+	assertNotNull(rsBody.createdDate)
+	assertNull(rsBody.lastModifiedBy)
+	assertNull(rsBody.lastModifiedDate)
+	assertEquals(0, rsBody.version)
 }

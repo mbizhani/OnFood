@@ -4,9 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.devocative.onfood.config.JwtAuthenticationToken;
 import org.devocative.onfood.iservice.ISecurityService;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,11 +41,7 @@ public class SecurityService implements ISecurityService {
 
 		log.debug("AuthenticateByToken: userId=[{}] subject=[{}] role=[{}]", userId, subject, role);
 
-		final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-			subject,
-			userId,
-			Collections.singletonList(new SimpleGrantedAuthority(role)));
-		SecurityContextHolder.getContext().setAuthentication(authToken);
+		setSecurityContext(subject, userId, role);
 	}
 
 	@Override
@@ -56,6 +52,8 @@ public class SecurityService implements ISecurityService {
 
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR, 1);
+
+		setSecurityContext(username, userId, role);
 
 		return Jwts.builder()
 			.setClaims(claims)
@@ -73,5 +71,13 @@ public class SecurityService implements ISecurityService {
 			throw new BadCredentialsException(message);
 		}
 		return val;
+	}
+
+	private void setSecurityContext(String username, Long userId, String role) {
+		final JwtAuthenticationToken authToken = new JwtAuthenticationToken(
+			username,
+			userId,
+			Collections.singletonList(new SimpleGrantedAuthority(role)));
+		SecurityContextHolder.getContext().setAuthentication(authToken);
 	}
 }

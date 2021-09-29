@@ -1,6 +1,7 @@
 package org.devocative.onfood.iservice;
 
 import org.devocative.onfood.dto.CalendarDTO;
+import org.devocative.onfood.model.AuditedUser;
 import org.devocative.onfood.service.CalendarService;
 
 import java.util.Date;
@@ -12,19 +13,22 @@ public interface IBaseBeanMapper {
 	}
 
 	default CalendarDTO.DateTimeDTO toDateTimeDto(Date date) {
-		return getCalendarService().toDateTimeDTO(date);
+		return date != null ? getCalendarService().toDateTimeDTO(date) : null;
 	}
 
 	default Date toDate(CalendarDTO.DateTimeDTO dto) {
-		return getCalendarService().toDate(dto);
+		return dto != null ? getCalendarService().toDate(dto) : null;
 	}
 
 	default CalendarDTO.DateDTO toDateDto(Date date) {
-		return getCalendarService().toDateDTO(date);
+		return date != null ? getCalendarService().toDateDTO(date) : null;
 	}
 
 	default Date toDate(CalendarDTO.DateDTO dto) {
-		return getCalendarService().toDate(dto);
+		return dto != null ? getCalendarService().toDate(dto) : null;
 	}
 
+	default String fromAuditedUser(AuditedUser user) {
+		return user != null ? user.getUsername() : null;
+	}
 }
