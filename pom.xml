@@ -21,6 +21,8 @@
 		<java.version>11</java.version>
 		<d.mapstruct>1.4.2.Final</d.mapstruct>
 		<d.swagger.version>3.0.0</d.swagger.version>
+
+		<spring-cloud.version>2020.0.4</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -40,7 +42,7 @@
 		</dependency>
 
 
-		<!-- D A T A  &  D B -->
+		<!-- D A T A   &   D B -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -134,6 +136,31 @@
 		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>Cloud</id>
+
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-consul-discovery</artifactId>
+				</dependency>
+			</dependencies>
+
+			<dependencyManagement>
+				<dependencies>
+					<dependency>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-dependencies</artifactId>
+						<version>${spring-cloud.version}</version>
+						<type>pom</type>
+						<scope>import</scope>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -216,10 +243,6 @@
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-						</exclude>
-						<exclude>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct</artifactId>
 						</exclude>
 					</excludes>
 				</configuration>

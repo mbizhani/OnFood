@@ -17,3 +17,16 @@ spring:
     change-log: classpath:db/changelog/liquibase-master.xml
     database-change-log-table: z_liq_changelog
     database-change-log-lock-table: z_liq_changelog_lock
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instance-id: onfood1
+        hostname: onfood.example.com
+        port: 80
+        metadata:
+          branch: main
+        tags:
+          - sample
