@@ -43,10 +43,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 			.authorizeRequests().antMatchers(
-			"/api/restaurateurs/registrations",
-			"/api/restaurateurs/registrations/*",
-			"/api/restaurateurs/logins",
-			"/api/j4d/registrations/*").permitAll()
+				"/api/restaurateurs/registrations",
+				"/api/restaurateurs/registrations/*",
+				"/api/restaurateurs/logins",
+				"/api/j4d/registrations/*",
+				"/actuator/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			// TIP: By default, HttpServletResponse.SC_FORBIDDEN is sent!

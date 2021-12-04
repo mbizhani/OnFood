@@ -30,3 +30,15 @@ spring:
           branch: main
         tags:
           - sample
+
+## Enable `conditions evaluation report`
+#debug: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
