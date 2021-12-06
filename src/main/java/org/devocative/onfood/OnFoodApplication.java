@@ -9,6 +9,9 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 public class OnFoodApplication {
 
 	public static void main(String[] args) {
+		// TIP: due to  warning in log saying 'liquibase.hub: Skipping auto-registration'
+		System.setProperty("liquibase.hub.mode", "off");
+
 		SpringApplication.run(OnFoodApplication.class, args);
 	}
 

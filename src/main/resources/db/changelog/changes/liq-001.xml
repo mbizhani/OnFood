@@ -1,33 +1,35 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
 	<changeSet author="mehdi (generated)" id="1632836580784-1">
 		<createTable tableName="t_food">
-			<column autoIncrement="true" name="id" type="BIGINT">
+			<column autoIncrement="true" name="id" type="NUMBER(19, 0)">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="t_foodPK"/>
 			</column>
-			<column name="f_created_by_user_id" type="BIGINT">
+			<column name="f_created_by_user_id" type="NUMBER(19, 0)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="c_created_by_username" type="VARCHAR(255)">
+			<column name="c_created_by_username" type="VARCHAR2(255 CHAR)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="d_created_date" type="TIMESTAMP">
 				<constraints nullable="false"/>
 			</column>
-			<column name="f_last_modified_by_user_id" type="BIGINT"/>
-			<column name="c_last_modified_by_username" type="VARCHAR(255)"/>
+			<column name="f_last_modified_by_user_id" type="NUMBER(19, 0)"/>
+			<column name="c_last_modified_by_username" type="VARCHAR2(255 CHAR)"/>
 			<column name="d_last_modified_date" type="TIMESTAMP"/>
-			<column name="n_version" type="INT">
+			<column name="n_version" type="NUMBER(10, 0)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="c_name" type="VARCHAR(255)">
+			<column name="c_name" type="VARCHAR2(255 CHAR)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="n_price" type="INT"/>
-			<column name="f_restaurant" type="BIGINT">
+			<column name="n_price" type="NUMBER(10, 0)"/>
+			<column name="f_restaurant" type="NUMBER(19, 0)">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
@@ -35,43 +37,44 @@
 
 	<changeSet author="mehdi (generated)" id="1632836580784-2">
 		<createTable tableName="t_restaurant">
-			<column autoIncrement="true" name="id" type="BIGINT">
+			<column autoIncrement="true" name="id" type="NUMBER(19, 0)">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="t_restaurantPK"/>
 			</column>
-			<column name="c_name" type="VARCHAR(255)">
+			<column name="c_name" type="VARCHAR2(255 CHAR)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="n_rate" type="FLOAT"/>
-			<column name="e_status" type="INT"/>
+			<column name="e_status" type="NUMBER(10, 0)"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="mehdi (generated)" id="1632836580784-3">
 		<createTable tableName="t_restaurateur">
-			<column autoIncrement="true" name="id" type="BIGINT">
+			<column autoIncrement="true" name="id" type="NUMBER(19, 0)">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="t_restaurateurPK"/>
 			</column>
-			<column name="f_created_by_user_id" type="BIGINT">
+			<column name="f_created_by_user_id" type="NUMBER(19, 0)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="c_created_by_username" type="VARCHAR(255)">
+			<column name="c_created_by_username" type="VARCHAR2(255 CHAR)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="d_created_date" type="TIMESTAMP">
 				<constraints nullable="false"/>
 			</column>
-			<column name="f_last_modified_by_user_id" type="BIGINT"/>
-			<column name="c_last_modified_by_username" type="VARCHAR(255)"/>
+			<column name="f_last_modified_by_user_id" type="NUMBER(19, 0)"/>
+			<column name="c_last_modified_by_username" type="VARCHAR2(255 CHAR)"/>
 			<column name="d_last_modified_date" type="TIMESTAMP"/>
-			<column name="n_version" type="INT">
+			<column name="n_version" type="NUMBER(10, 0)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="c_cell" type="VARCHAR(255)">
+			<column name="d_birth_date" type="date"/>
+			<column name="c_cell" type="VARCHAR2(255 CHAR)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="c_email" type="VARCHAR(255)"/>
-			<column name="c_first_name" type="VARCHAR(255)"/>
-			<column name="c_last_name" type="VARCHAR(255)"/>
-			<column name="c_password" type="VARCHAR(255)"/>
+			<column name="c_email" type="VARCHAR2(255 CHAR)"/>
+			<column name="c_first_name" type="VARCHAR2(255 CHAR)"/>
+			<column name="c_last_name" type="VARCHAR2(255 CHAR)"/>
+			<column name="c_password" type="VARCHAR2(255 CHAR)"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="mehdi (generated)" id="1632836580784-4">

@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ import java.util.Date;
 public abstract class Auditable {
 	@CreatedDate
 	@Column(name = "d_created_date", nullable = false, updatable = false)
-	private Date createdDate;
+	private Instant createdDate;
 
 	@CreatedBy
 	@AttributeOverrides({
@@ -33,7 +33,7 @@ public abstract class Auditable {
 
 	@LastModifiedDate
 	@Column(name = "d_last_modified_date", insertable = false)
-	private Date lastModifiedDate;
+	private Instant lastModifiedDate;
 
 	@LastModifiedBy
 	@AttributeOverrides({

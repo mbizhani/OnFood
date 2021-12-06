@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,4 +30,7 @@ public abstract class Person extends Auditable {
 
 	@Column(name = "c_email")
 	private String email;
+
+	@Column(name = "d_birth_date")
+	private LocalDate birthDate;
 }

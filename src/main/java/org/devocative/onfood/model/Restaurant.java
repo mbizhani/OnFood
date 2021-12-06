@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.devocative.onfood.model.Restaurant.UC_MAIN;
 
@@ -30,4 +32,13 @@ public class Restaurant {
 
 	@Column(name = "e_status")
 	private EStatus status;
+
+	@Column(name = "d_opening_date")
+	private LocalDate openingDate;
+
+	@Column(name = "d_start_time")
+	private LocalTime startTime;
+
+	@Column(name = "d_close_time")
+	private LocalTime closeTime;
 }

@@ -1,22 +1,72 @@
+server:
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+## Enable `conditions evaluation report`
+#debug: true
+
 spring:
+  profiles:
+    active: dev
   application:
     name: OnFood
   jpa:
-    database: hsql
-    hibernate:
-      ddl-auto: validate
     open-in-view: false
-    show-sql: true
-
-  datasource:
-    url: jdbc:hsqldb:mem:test
-    username: sa
-  #    password: ""
-
   liquibase:
     change-log: classpath:db/changelog/liquibase-master.xml
-    database-change-log-table: z_liq_changelog
-    database-change-log-lock-table: z_liq_changelog_lock
+    # TIP: for oracle, table's name must be capital!
+    database-change-log-table: Z_LIQ_CHANGELOG
+    database-change-log-lock-table: Z_LIQ_CHANGELOG_LOCK
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle12cDialect
+    show-sql: true
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/orclpdb1.localdomain
+    username: u_onfood
+    password: onFood
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.HSQLDialect
+    show-sql: true
+  datasource:
+    url: jdbc:hsqldb:mem:test;sql.syntax_ora=true
+    username: sa
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
 
   cloud:
     consul:
@@ -30,15 +80,3 @@ spring:
           branch: main
         tags:
           - sample
-
-## Enable `conditions evaluation report`
-#debug: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always

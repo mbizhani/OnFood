@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+	<changeSet author="mehdi (generated)" id="1638788036014-1">
+		<addColumn tableName="t_restaurant">
+			<column name="d_close_time" type="date"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="mehdi (generated)" id="1638788036014-2">
+		<addColumn tableName="t_restaurant">
+			<column name="d_opening_date" type="date"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="mehdi (generated)" id="1638788036014-3">
+		<addColumn tableName="t_restaurant">
+			<column name="d_start_time" type="date"/>
+		</addColumn>
+	</changeSet>
+</databaseChangeLog>
