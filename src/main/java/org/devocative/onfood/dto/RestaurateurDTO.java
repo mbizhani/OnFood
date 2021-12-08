@@ -16,6 +16,7 @@ public abstract class RestaurateurDTO {
 	@NotNull
 	private String cell;
 	private String email;
+	private CalendarDTO.DateDTO birthDate;
 
 	// ------------------------------
 
@@ -41,9 +42,9 @@ public abstract class RestaurateurDTO {
 	public static class RestaurateurRs extends RestaurateurDTO {
 		private Long id;
 		private String createdBy;
-		private CalendarDTO.DateDTO createdDate;
+		private CalendarDTO.DateTimeDTO createdDate;
 		private String lastModifiedBy;
-		private CalendarDTO.DateDTO lastModifiedDate;
+		private CalendarDTO.DateTimeDTO lastModifiedDate;
 		private Integer version;
 	}
 

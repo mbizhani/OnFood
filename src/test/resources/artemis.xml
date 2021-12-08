@@ -28,7 +28,12 @@
     "lastName": "${lastName}",
     "cell": "${cell}",
     "code": "${_prev.rs.code}",
-    "password": "${password}"
+    "password": "${password}",
+    "birthDate": {
+        "year": 1360,
+        "month": 6,
+        "day": 2
+    }
 }
             ]]></body>
 
