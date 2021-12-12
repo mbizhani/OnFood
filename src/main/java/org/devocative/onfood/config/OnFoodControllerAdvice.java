@@ -36,7 +36,7 @@ public class OnFoodControllerAdvice {
 	@ExceptionHandler(OnFoodException.class)
 	public ResponseEntity<ErrorDTO.GeneralRs> handleOnFoodException(OnFoodException ex) {
 		return new ResponseEntity<>(
-			new ErrorDTO.GeneralRs(ex.getCode().getName(), ex.getDescription()),
+			new ErrorDTO.GeneralRs(ex.getCode().getCode(), ex.getDescription()),
 			HttpStatus.valueOf(ex.getCode().getHttpStatusCode())
 		);
 	}

@@ -25,11 +25,11 @@ public abstract class ErrorDTO {
 		}
 
 		public GeneralRs(IErrorCode errorCode) {
-			this(errorCode.getName(), errorCode.getName());
+			this(errorCode.getCode(), errorCode.getCode());
 		}
 
 		public GeneralRs(IErrorCode errorCode, String description) {
-			this(errorCode.getName(), description);
+			this(errorCode.getCode(), description);
 		}
 
 		public GeneralRs addField(String field) {

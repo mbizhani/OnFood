@@ -13,7 +13,7 @@ public enum FoodErrorCode implements IErrorCode {
 	private final Integer httpStatusCode;
 
 	@Override
-	public String getName() {
+	public String getCode() {
 		return name();
 	}
 }
