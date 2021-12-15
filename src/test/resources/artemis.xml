@@ -58,7 +58,7 @@
 				<header name="Authorization" value="${register.rs.token}"/>
 			</headers>
 
-			<assertRs status="403" properties="timestamp,status,error,path"/>
+			<assertRs status="403" properties="code"/>
 		</get>
 
 		<get url="/restaurateurs/${register.rs.userId}">
@@ -90,11 +90,58 @@
 }
             ]]></body>
 
-			<assertRs status="400" properties="code,description,fields"/>
+			<assertRs status="400" properties="code,fields"/>
 		</post>
 	</scenario>
 
-	<scenario name="LoginRestaurateur">
+	<scenario name="RegisterRestaurateur-Validation">
+		<get url="/restaurateurs/registrations/${cell}">
+			<assertRs status="200" body="empty"/>
+		</get>
+
+		<get url="/j4d/registrations/${cell}">
+			<assertRs status="200" properties="code"/>
+		</get>
+
+		<post url="/restaurateurs/registrations">
+			<body><![CDATA[
+{
+	"cell": "${cell}",
+    "code": "${_prev.rs.code}",
+    "password": "${password}",
+    "email": "email.com"
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code,fields"/>
+			<!-- Error Response: javax.validation.ConstraintViolationException
+			{
+			  "code":"InputValidationError",
+			  "fields":[{"field":"lastName","code":"NotNull"},{"field":"email","code":"Email"},{"field":"firstName","code":"NotNull"}]
+			}
+			-->
+		</post>
+
+		<post url="/restaurateurs/registrations">
+			<body><![CDATA[
+{
+    "firstName": "${firstName}",
+    "lastName": "${lastName}"
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code,fields"/>
+			<!-- Error Response: org.springframework.web.bind.MethodArgumentNotValidException
+			{
+			  "code":"InputValidationError",
+			  "fields":[{"field":"password","code":"NotNull"},{"field":"code","code":"NotNull"},{"field":"cell","code":"NotNull"}]
+			}
+			-->
+		</post>
+
+	</scenario>
+
+	<!--<scenario name="LoginRestaurateur">
 
 		<post id="login" url="/restaurateurs/logins">
 			<body><![CDATA[
@@ -115,6 +162,6 @@
 			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
 		</get>
 
-	</scenario>
+	</scenario>-->
 
 </artemis>

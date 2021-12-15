@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -16,10 +18,12 @@ public abstract class Person extends Auditable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "c_first_name")
+	@NotNull
+	@Column(name = "c_first_name", nullable = false)
 	private String firstName;
 
-	@Column(name = "c_last_name")
+	@NotNull
+	@Column(name = "c_last_name", nullable = false)
 	private String lastName;
 
 	@Column(name = "c_cell", nullable = false)
@@ -28,6 +32,7 @@ public abstract class Person extends Auditable {
 	@Column(name = "c_password")
 	private String password;
 
+	@Email
 	@Column(name = "c_email")
 	private String email;
 

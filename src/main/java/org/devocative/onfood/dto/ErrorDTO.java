@@ -16,25 +16,50 @@ public abstract class ErrorDTO {
 	public static class GeneralRs {
 		private final String code;
 		private final String description;
-		private final List<String> fields = new ArrayList<>();
+		private List<FieldDTO> fields;
 
 		// ------------------------------
 
-		public GeneralRs(Exception e) {
-			this(e.getClass().getSimpleName(), e.getMessage());
+		public GeneralRs(String code) {
+			this(code, null);
 		}
 
 		public GeneralRs(IErrorCode errorCode) {
-			this(errorCode.getCode(), errorCode.getCode());
+			this(errorCode.getCode());
 		}
 
 		public GeneralRs(IErrorCode errorCode, String description) {
 			this(errorCode.getCode(), description);
 		}
 
-		public GeneralRs addField(String field) {
+		// ------------------------------
+
+		public GeneralRs addField(FieldDTO field) {
+			if (fields == null) {
+				fields = new ArrayList<>();
+			}
 			fields.add(field);
 			return this;
+		}
+
+		public GeneralRs addFields(List<FieldDTO> list) {
+			if (fields == null) {
+				fields = new ArrayList<>();
+			}
+			fields.addAll(list);
+			return this;
+		}
+	}
+
+	@Getter
+	@RequiredArgsConstructor
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class FieldDTO {
+		private final String field;
+		private final String code;
+
+		public FieldDTO(String field) {
+			this(field, null);
 		}
 	}
 }

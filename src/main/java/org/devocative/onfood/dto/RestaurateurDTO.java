@@ -9,9 +9,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public abstract class RestaurateurDTO {
-	@NotNull
+	/*
+	it is @NotNull, but just for test, only applied on the entity.
+	*/
 	private String firstName;
-	@NotNull
+	/*
+	it is @NotNull, but just for test, only applied on the entity.
+	*/
 	private String lastName;
 	@NotNull
 	private String cell;

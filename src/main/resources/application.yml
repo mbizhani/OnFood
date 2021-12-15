@@ -20,6 +20,7 @@ spring:
     name: OnFood
   jpa:
     open-in-view: false
+    show-sql: false
   liquibase:
     change-log: classpath:db/changelog/liquibase-master.xml
     # TIP: for oracle, table's name must be capital!
@@ -38,11 +39,16 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.Oracle12cDialect
-    show-sql: true
   datasource:
     url: jdbc:oracle:thin:@localhost:1521/orclpdb1.localdomain
     username: u_onfood
     password: onFood
+
+decorator:
+  datasource:
+    datasource-proxy:
+      query:
+        log-level: INFO
 
 ---
 
@@ -56,7 +62,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.HSQLDialect
-    show-sql: true
   datasource:
     url: jdbc:hsqldb:mem:test;sql.syntax_ora=true
     username: sa
