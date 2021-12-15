@@ -75,6 +75,20 @@ public class RestaurateurService implements IRestaurateurService {
 		}
 	}
 
+	@PreAuthorize("hasAuthority('" + ISecurityService.RESTAURATEUR_ROLE + "') and #id == authentication.userId")
+	@Transactional
+	@Override
+	public RestaurateurDTO.RestaurateurRs update(Long id, RestaurateurDTO.RestaurateurRq restaurateurRq) {
+		final Restaurateur oldRestaurateur = restaurateurRepository.findById(id)
+			.orElseThrow(() -> new OnFoodException(RestaurateurErrorCode.RestaurateurNotFound, id.toString()));
+
+		final Restaurateur restaurateur = beanMapper.cloneFrom(oldRestaurateur);
+		beanMapper.updateRestaurateur(restaurateur, restaurateurRq);
+
+		final Restaurateur updated = restaurateurRepository.saveAndFlush(restaurateur);
+		return beanMapper.toRestaurateurRs(updated);
+	}
+
 	@Override
 	public RestaurateurDTO.LoginRs login(RestaurateurDTO.LoginRq loginRq) {
 		final Restaurateur restaurateur = restaurateurRepository.findByCell(loginRq.getCell())

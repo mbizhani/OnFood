@@ -29,7 +29,13 @@ def assertRs_profile(Context ctx, Map rsBody) {
 	assertEquals(ctx.vars.cell, rsBody.cell)
 	assertEquals("anonymous", rsBody.createdBy)
 	assertNotNull(rsBody.createdDate)
-	assertNull(rsBody.lastModifiedBy)
-	assertNull(rsBody.lastModifiedDate)
+	assertFalse(rsBody.containsKey("lastModifiedBy"))
+	assertFalse(rsBody.containsKey("lastModifiedDate"))
 	assertEquals(0, rsBody.version)
+}
+
+def assertRs_updateProfile(Context ctx, Map rsBody) {
+	assertNotNull(rsBody.lastModifiedBy)
+	assertNotNull(rsBody.lastModifiedDate)
+	assertEquals(1, rsBody.version)
 }

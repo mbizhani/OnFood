@@ -1,9 +1,11 @@
 package org.devocative.onfood.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -43,6 +45,15 @@ public abstract class RestaurateurDTO {
 
 	@Getter
 	@Setter
+	public static class RestaurateurRq extends RestaurateurDTO {
+		@NotNull
+		@Min(0)
+		private Integer version;
+	}
+
+	@Getter
+	@Setter
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public static class RestaurateurRs extends RestaurateurDTO {
 		private Long id;
 		private String createdBy;

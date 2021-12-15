@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -51,7 +52,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest().authenticated()
 			.and()
 			// TIP: By default, HttpServletResponse.SC_FORBIDDEN is sent!
-			.exceptionHandling().authenticationEntryPoint((rq, rs, e) -> rs.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+			//.exceptionHandling().authenticationEntryPoint((rq, rs, e) -> rs.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+			.exceptionHandling().authenticationEntryPoint((rq, rs, e) -> {
+				rs.setContentType("application/json");
+				rs.setCharacterEncoding("UTF-8");
+				rs.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+				final PrintWriter writer = rs.getWriter();
+				writer.write("{\"code\": \"AccessDenied\"}");
+				writer.flush();
+			})
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

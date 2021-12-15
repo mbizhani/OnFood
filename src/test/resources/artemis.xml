@@ -45,10 +45,51 @@
 				<header name="Authorization" value="${register.rs.token}"/>
 			</headers>
 
+			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version" call="true"/>
+		</get>
+
+		<put id="updateProfile" url="/restaurateurs/${register.rs.userId}">
+			<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>
+
+			<body><![CDATA[
+{
+    "firstName": "${firstName}-UP",
+    "lastName": "${lastName}-UP",
+    "cell": "${cell}",
+    "birthDate": {
+        "year": 1360,
+        "month": 2,
+        "day": 6
+    },
+    "version": 0
+}
+            ]]></body>
+
 			<assertRs status="200"
 			          properties="id,firstName,lastName,cell,createdBy,createdDate,lastModifiedBy,lastModifiedDate,version"
 			          call="true"/>
-		</get>
+		</put>
+
+		<!-- Assert ObjectOptimisticLockingFailure -->
+
+		<put url="/restaurateurs/${register.rs.userId}">
+			<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>
+
+			<body><![CDATA[
+{
+    "firstName": "${firstName}-UP2",
+    "lastName": "${lastName}-UP2",
+    "cell": "${cell}",
+    "version": 0
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code"/>
+		</put>
 
 
 		<!-- Assert Unauthorized/Forbidden -->
@@ -62,11 +103,11 @@
 		</get>
 
 		<get url="/restaurateurs/${register.rs.userId}">
-			<assertRs status="401" properties="timestamp,status,error,path"/>
+			<assertRs status="403" properties="code"/>
 		</get>
 
 		<get url="/restaurateurs/9999999999">
-			<assertRs status="401" properties="timestamp,status,error,path"/>
+			<assertRs status="403" properties="code"/>
 		</get>
 	</scenario>
 
@@ -141,7 +182,7 @@
 
 	</scenario>
 
-	<!--<scenario name="LoginRestaurateur">
+	<scenario name="LoginRestaurateur">
 
 		<post id="login" url="/restaurateurs/logins">
 			<body><![CDATA[
@@ -161,7 +202,6 @@
 
 			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
 		</get>
-
-	</scenario>-->
+	</scenario>
 
 </artemis>

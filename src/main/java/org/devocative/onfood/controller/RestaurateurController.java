@@ -34,6 +34,13 @@ public class RestaurateurController {
 		return ResponseEntity.ok(restaurateurService.getRestaurateur(id));
 	}
 
+	@PutMapping("/{id}")
+	public ResponseEntity<RestaurateurDTO.RestaurateurRs> updateRestaurateur(
+		@PathVariable Long id,
+		@Valid @RequestBody RestaurateurDTO.RestaurateurRq restaurateurRq) {
+		return ResponseEntity.ok(restaurateurService.update(id, restaurateurRq));
+	}
+
 	@PostMapping("/logins")
 	public ResponseEntity<RestaurateurDTO.LoginRs> login(@Valid @RequestBody RestaurateurDTO.LoginRq loginRq) {
 		return ResponseEntity.ok(restaurateurService.login(loginRq));

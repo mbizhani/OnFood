@@ -10,8 +10,10 @@ import org.devocative.onfood.model.Restaurateur;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-//@ControllerAdvice
+@ControllerAdvice
 public class OnFoodControllerAdvice {
 	private final Map<String, ErrorDTO.GeneralRs> uniqueConstraintErrors = new HashMap<>();
 
@@ -45,6 +47,8 @@ public class OnFoodControllerAdvice {
 			HttpStatus.valueOf(ex.getCode().getHttpStatusCode())
 		);
 	}
+
+	// ---------------
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ErrorDTO.GeneralRs> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
@@ -70,10 +74,12 @@ public class OnFoodControllerAdvice {
 		return new ResponseEntity<>(new ErrorDTO.GeneralRs("DataIntegrityViolation"), HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<ErrorDTO.GeneralRs> handleSecurityException(AccessDeniedException ex) {
-		return new ResponseEntity<>(new ErrorDTO.GeneralRs("AccessDenied"), HttpStatus.FORBIDDEN);
+	@ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+	public ResponseEntity<ErrorDTO.GeneralRs> handleObjectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
+		return new ResponseEntity<>(new ErrorDTO.GeneralRs("ObjectOptimisticLockingFailure"), HttpStatus.BAD_REQUEST);
 	}
+
+	// ---------------
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorDTO.GeneralRs> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -105,6 +111,13 @@ public class OnFoodControllerAdvice {
 
 		return new ResponseEntity<>(
 			new ErrorDTO.GeneralRs("InputValidationError").addFields(fields), HttpStatus.BAD_REQUEST);
+	}
+
+	// ---------------
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ErrorDTO.GeneralRs> handleAccessDeniedException(AccessDeniedException ex) {
+		return new ResponseEntity<>(new ErrorDTO.GeneralRs("AccessDenied"), HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(Exception.class)
