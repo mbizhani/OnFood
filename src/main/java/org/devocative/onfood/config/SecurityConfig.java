@@ -17,6 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -48,7 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/restaurateurs/registrations/*",
 				"/api/restaurateurs/logins",
 				"/api/j4d/registrations/*",
-				"/actuator/**").permitAll()
+				"/actuator/**",
+				"/swagger-resources/**",
+				"/swagger-ui/**",
+				"/v3/api-docs/**"
+			).permitAll()
 			.anyRequest().authenticated()
 			.and()
 			// TIP: By default, HttpServletResponse.SC_FORBIDDEN is sent!
@@ -93,5 +101,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public Docket swaggerDocket() {
+		return new Docket(DocumentationType.OAS_30)
+			.groupName("OnFood-API")
+			.select()
+			.apis(RequestHandlerSelectors.basePackage("org.devocative.onfood"))
+			.paths(PathSelectors.any())
+			.build();
 	}
 }
