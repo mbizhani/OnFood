@@ -2,6 +2,8 @@ package org.devocative.onfood.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import static org.devocative.onfood.model.Restaurant.UC_MAIN;
 
 @Getter
 @Setter
+@Accessors(chain = true)
+@ToString
 @Entity
 @Table(name = "t_restaurant", uniqueConstraints = {
 	@UniqueConstraint(name = UC_MAIN, columnNames = "c_name")

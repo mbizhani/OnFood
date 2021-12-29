@@ -3,6 +3,8 @@ package org.devocative.onfood.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import static org.devocative.onfood.model.Food.UC_MAIN;
 
 @Getter
 @Setter
+@Accessors(chain = true)
+@ToString(exclude = "restaurantId")
 @Entity
 @Table(name = "t_food", uniqueConstraints = {
 	@UniqueConstraint(name = UC_MAIN, columnNames = {"f_restaurant", "c_name"})

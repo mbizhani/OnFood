@@ -66,6 +66,12 @@ spring:
     url: jdbc:hsqldb:mem:test;sql.syntax_ora=true
     username: sa
 
+decorator:
+  datasource:
+    datasource-proxy:
+      query:
+        log-level: INFO
+
 ---
 
 spring:
