@@ -25,4 +25,17 @@ public class MultiValueComparisonExpression extends ABooleanExpression<Compariso
 		this.property = property;
 		this.values = Arrays.asList(values);
 	}
+
+	@Override
+	public void validate() {
+		super.validate();
+
+		if (isEmpty(property)) {
+			throw new RuntimeException("Property Required: " + this);
+		}
+
+		if (values == null || values.isEmpty()) {
+			throw new RuntimeException("Values Required: " + this);
+		}
+	}
 }

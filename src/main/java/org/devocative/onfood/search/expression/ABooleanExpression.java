@@ -31,4 +31,14 @@ import javax.validation.constraints.NotNull;
 public abstract class ABooleanExpression<T> {
 	@NotNull
 	private T operator;
+
+	public void validate() {
+		if (operator == null) {
+			throw new RuntimeException("Operator Required: " + this);
+		}
+	}
+
+	protected boolean isEmpty(String value) {
+		return value == null || value.trim().isEmpty();
+	}
 }

@@ -23,4 +23,17 @@ public class SingleValueComparisonExpression extends ABooleanExpression<Comparis
 		this.property = property;
 		this.value = value;
 	}
+
+	@Override
+	public void validate() {
+		super.validate();
+
+		if (isEmpty(property)) {
+			throw new RuntimeException("Property Required: " + this);
+		}
+
+		if (isEmpty(value)) {
+			throw new RuntimeException("Value Required: " + this);
+		}
+	}
 }

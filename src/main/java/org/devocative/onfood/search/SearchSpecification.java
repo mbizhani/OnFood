@@ -30,6 +30,8 @@ public class SearchSpecification<T> implements Specification<T> {
 	}
 
 	private Predicate processA(ABooleanExpression<?> expression, Root<T> root, CriteriaBuilder builder) {
+		expression.validate();
+
 		if (expression instanceof MultiOperandLogicalExpression) {
 			return process((MultiOperandLogicalExpression) expression, root, builder);
 		} else if (expression instanceof SingleOperandLogicalExpression) {

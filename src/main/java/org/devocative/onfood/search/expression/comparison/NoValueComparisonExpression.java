@@ -20,4 +20,11 @@ public class NoValueComparisonExpression extends ABooleanExpression<ComparisonOp
 		setOperator(operator);
 		this.property = property;
 	}
+
+	@Override
+	public void validate() {
+		if (isEmpty(property)) {
+			throw new RuntimeException("Property Required: " + this);
+		}
+	}
 }

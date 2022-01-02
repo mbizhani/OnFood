@@ -17,4 +17,13 @@ public class SingleOperandLogicalExpression extends ABooleanExpression<LogicalOp
 		setOperator(operator);
 		this.operand = operand;
 	}
+
+	@Override
+	public void validate() {
+		super.validate();
+
+		if (operand == null) {
+			throw new RuntimeException("Operand Required: " + this);
+		}
+	}
 }

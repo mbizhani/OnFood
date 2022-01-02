@@ -26,4 +26,17 @@ public class RangeValueComparisonExpression extends ABooleanExpression<Compariso
 		this.start = start;
 		this.end = end;
 	}
+
+	@Override
+	public void validate() {
+		super.validate();
+
+		if (isEmpty(property)) {
+			throw new RuntimeException("Property Required: " + this);
+		}
+
+		if (isEmpty(start) || isEmpty(end)) {
+			throw new RuntimeException("Start or End Required: " + this);
+		}
+	}
 }

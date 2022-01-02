@@ -6,7 +6,7 @@
 
 	<changeSet author="mehdi (generated)" id="1638788036014-1">
 		<addColumn tableName="t_restaurant">
-			<column name="d_close_time" type="date"/>
+			<column name="d_close_time" type="time"/>
 		</addColumn>
 	</changeSet>
 
@@ -18,7 +18,7 @@
 
 	<changeSet author="mehdi (generated)" id="1638788036014-3">
 		<addColumn tableName="t_restaurant">
-			<column name="d_start_time" type="date"/>
+			<column name="d_start_time" type="time"/>
 		</addColumn>
 	</changeSet>
 </databaseChangeLog>
