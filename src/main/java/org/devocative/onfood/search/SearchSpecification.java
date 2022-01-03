@@ -15,21 +15,49 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.devocative.onfood.search.SortExpression.EMode.Asc;
+
 @RequiredArgsConstructor
 public class SearchSpecification<T> implements Specification<T> {
 	private final ABooleanExpression<?> expression;
+	private final List<SortExpression> sorts;
+	private final boolean distinct;
+
+	// ------------------------------
+
+	public SearchSpecification(ABooleanExpression<?> expression) {
+		this(expression, null, false);
+	}
+
+	public SearchSpecification(ABooleanExpression<?> expression, List<SortExpression> sorts) {
+		this(expression, sorts, false);
+	}
+
+	// ------------------------------
 
 	@Override
 	public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-		return processA(expression, root, builder);
+		if (sorts != null && !sorts.isEmpty()) {
+			final List<Order> orders = sorts.stream()
+				.map(sort -> sort.getMode() == Asc ?
+					builder.asc(findPath(root, sort.getProperty())) :
+					builder.desc(findPath(root, sort.getProperty())))
+				.collect(Collectors.toList());
+			query.orderBy(orders);
+		}
+
+		query.distinct(distinct);
+
+		return expression != null ? processGeneral(expression, root, builder) : null;
 	}
 
-	private Predicate processA(ABooleanExpression<?> expression, Root<T> root, CriteriaBuilder builder) {
+	private Predicate processGeneral(ABooleanExpression<?> expression, Root<T> root, CriteriaBuilder builder) {
 		expression.validate();
 
 		if (expression instanceof MultiOperandLogicalExpression) {
@@ -48,9 +76,11 @@ public class SearchSpecification<T> implements Specification<T> {
 		throw new RuntimeException("Invalid Expression");
 	}
 
+	// --- Logical ---
+
 	private Predicate process(MultiOperandLogicalExpression expression, Root<T> root, CriteriaBuilder builder) {
 		final List<Predicate> predicates = expression.getOperands().stream()
-			.map(expr -> processA(expr, root, builder))
+			.map(expr -> processGeneral(expr, root, builder))
 			.collect(Collectors.toList());
 		switch (expression.getOperator()) {
 			case And:
@@ -65,11 +95,13 @@ public class SearchSpecification<T> implements Specification<T> {
 	private Predicate process(SingleOperandLogicalExpression expression, Root<T> root, CriteriaBuilder builder) {
 		switch (expression.getOperator()) {
 			case Not:
-				return builder.not(processA(expression.getOperand(), root, builder));
+				return builder.not(processGeneral(expression.getOperand(), root, builder));
 			default:
 				throw new RuntimeException("Invalid LogicalOperator.ESingleOperand: " + expression.getOperator());
 		}
 	}
+
+	// --- Comparison ---
 
 	private Predicate process(MultiValueComparisonExpression expression, Root<T> root, CriteriaBuilder builder) {
 		final Path path = findPath(root, expression.getProperty());
@@ -177,13 +209,6 @@ public class SearchSpecification<T> implements Specification<T> {
 	}
 
 	private Comparable<?> convert(Class<?> cls, String value) {
-		/*if (cls.equals(Short.class) || cls.equals(Integer.class) || cls.equals(Long.class) || cls.equals(Float.class) || cls.equals(Double.class)) {
-			if (isNumeric(value))
-				return value;
-			else
-				return null;
-		}*/
-
 		if (cls.equals(String.class)) {
 			return value.trim();
 		}
@@ -216,11 +241,11 @@ public class SearchSpecification<T> implements Specification<T> {
 			return Instant.parse(value);
 		}
 
+		if (cls.equals(LocalTime.class)) {
+			return LocalTime.parse(value);
+		}
+
 		return value;
 	}
-
-	/*private boolean isNumeric(String strNum) {
-		return strNum.matches("-?\\d+(\\.\\d+)?");
-	}*/
 
 }

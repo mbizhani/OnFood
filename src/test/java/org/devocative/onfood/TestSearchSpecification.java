@@ -1,12 +1,16 @@
 package org.devocative.onfood;
 
 import lombok.extern.slf4j.Slf4j;
+import org.devocative.onfood.dto.SearchDTO;
 import org.devocative.onfood.model.EStatus;
 import org.devocative.onfood.model.Food;
 import org.devocative.onfood.model.Restaurant;
 import org.devocative.onfood.repository.IFoodRepository;
 import org.devocative.onfood.repository.IRestaurantRepository;
+import org.devocative.onfood.search.PageRequest;
 import org.devocative.onfood.search.SearchSpecification;
+import org.devocative.onfood.search.SearchUtil;
+import org.devocative.onfood.search.SortExpression;
 import org.devocative.onfood.search.expression.comparison.MultiValueComparisonExpression;
 import org.devocative.onfood.search.expression.comparison.NoValueComparisonExpression;
 import org.devocative.onfood.search.expression.comparison.RangeValueComparisonExpression;
@@ -17,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +30,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.devocative.onfood.search.expression.comparison.ComparisonOperator.EMultiValue.In;
@@ -91,9 +97,9 @@ public class TestSearchSpecification {
 	}
 
 	@Test
-	public void test() {
+	public void testExpressions() {
 		{
-			SingleValueComparisonExpression expression = new SingleValueComparisonExpression(GreaterThan, "price", "85");
+			final SingleValueComparisonExpression expression = new SingleValueComparisonExpression(GreaterThan, "price", "85");
 			final List<Food> list = foodRepository.findAll(new SearchSpecification<>(expression));
 			list.forEach(food -> log.info("** price > ?: {}", food));
 			assertEquals(2, list.size());
@@ -104,7 +110,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(And,
+			final MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(And,
 				new SingleValueComparisonExpression(GreaterThanEqual, "rate", "3"),
 				new RangeValueComparisonExpression(Between, "openingDate",
 					LocalDate.of(2019, Month.JANUARY, 1).toString(),
@@ -118,7 +124,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(Or,
+			final MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(Or,
 				new SingleValueComparisonExpression(LessThan, "rate", "3"),
 				new SingleValueComparisonExpression(Equal, "status", "Closed")
 			);
@@ -133,7 +139,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(And,
+			final MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(And,
 				new SingleValueComparisonExpression(Contain, "name", "Chicken"),
 				new SingleValueComparisonExpression(GreaterThan, "restaurant.rate", "2"));
 
@@ -148,7 +154,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(And,
+			final MultiOperandLogicalExpression expression = new MultiOperandLogicalExpression(And,
 				new NoValueComparisonExpression(NotEmpty, "startTime"),
 				new NoValueComparisonExpression(NotEmpty, "closeTime")
 			);
@@ -160,7 +166,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			NoValueComparisonExpression expression = new NoValueComparisonExpression(Empty, "rate");
+			final NoValueComparisonExpression expression = new NoValueComparisonExpression(Empty, "rate");
 			final List<Restaurant> list = restaurantRepository.findAll(new SearchSpecification<>(expression));
 			list.forEach(restaurant -> log.info("** rate is empty: {}", restaurant));
 			assertEquals(1, list.size());
@@ -168,7 +174,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			SingleOperandLogicalExpression expression = new SingleOperandLogicalExpression(Not,
+			final SingleOperandLogicalExpression expression = new SingleOperandLogicalExpression(Not,
 				new MultiValueComparisonExpression(In, "status", "Closed"));
 			final List<Restaurant> not_in = restaurantRepository.findAll(new SearchSpecification<>(expression));
 			not_in.forEach(restaurant -> log.info("** NOT (status in ?): {}", restaurant));
@@ -183,7 +189,7 @@ public class TestSearchSpecification {
 		}
 
 		{
-			SingleOperandLogicalExpression expression = new SingleOperandLogicalExpression(Not, new MultiOperandLogicalExpression(And,
+			final SingleOperandLogicalExpression expression = new SingleOperandLogicalExpression(Not, new MultiOperandLogicalExpression(And,
 				new NoValueComparisonExpression(NotEmpty, "startTime"),
 				new NoValueComparisonExpression(NotEmpty, "closeTime")
 			));
@@ -192,6 +198,56 @@ public class TestSearchSpecification {
 			list.forEach(restaurant -> log.info("** NOT (startTime is not empty AND closeTime is not empty): {}", restaurant));
 
 			assertEquals(3, list.size());
+		}
+
+		{
+			final RangeValueComparisonExpression expression = new RangeValueComparisonExpression(Between, "startTime", "08:00", "10:00");
+			final List<Restaurant> list = restaurantRepository.findAll(new SearchSpecification<>(expression));
+			list.forEach(restaurant -> log.info("** startTime between ? and ?: {}", restaurant));
+
+			assertEquals(1, list.size());
+			assertEquals("Black Joe", list.get(0).getName());
+		}
+	}
+
+	@Test
+	public void testPagination() {
+		final List<String> expectedNames = List.of("Beef Alfredo", "Chicken", "Chicken Pasta", "Pizza 1");
+
+		{
+			final Page<Food> page = foodRepository.findAll(
+				new SearchSpecification<>(
+					new SingleValueComparisonExpression(GreaterThan, "price", "50"),
+					List.of(new SortExpression("name"))
+				),
+				new PageRequest(1, 4)
+			);
+
+			final List<Food> list = page.getContent();
+			list.forEach(food -> log.info("** paged food: {}", food));
+
+			assertEquals(4, list.size());
+			assertEquals(6, page.getTotalElements());
+
+			for (int i = 0; i < expectedNames.size(); i++) {
+				assertEquals(expectedNames.get(i), list.get(i).getName());
+			}
+		}
+
+		{
+			final SearchDTO.SearchRq searchRq = new SearchDTO.SearchRq()
+				.setStartIndex(1)
+				.setCount(4)
+				.setFilter(new SingleValueComparisonExpression(GreaterThan, "price", "50"))
+				.setSorts(List.of(new SortExpression("name")));
+
+			final SearchDTO.SearchRs<Food> searchRs = SearchUtil.search(foodRepository, searchRq, Function.identity());
+			assertEquals(4, searchRs.getResult().size());
+			assertEquals(6, searchRs.getTotalCount());
+
+			for (int i = 0; i < expectedNames.size(); i++) {
+				assertEquals(expectedNames.get(i), searchRs.getResult().get(i).getName());
+			}
 		}
 	}
 }
