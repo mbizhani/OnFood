@@ -241,13 +241,25 @@ public class TestSearchSpecification {
 				.setFilter(new SingleValueComparisonExpression(GreaterThan, "price", "50"))
 				.setSorts(List.of(new SortExpression("name")));
 
-			final SearchDTO.SearchRs<Food> searchRs = SearchUtil.search(foodRepository, searchRq, Function.identity());
+			final SearchDTO.SearchRs<Food> searchRs = SearchUtil.search(foodRepository, searchRq, true, Function.identity());
 			assertEquals(4, searchRs.getResult().size());
 			assertEquals(6, searchRs.getTotalCount());
 
 			for (int i = 0; i < expectedNames.size(); i++) {
 				assertEquals(expectedNames.get(i), searchRs.getResult().get(i).getName());
 			}
+		}
+
+		{
+			final SearchDTO.SearchRq searchRq = new SearchDTO.SearchRq()
+				.setStartIndex(1)
+				.setCount(4)
+				.setFilter(new SingleValueComparisonExpression(GreaterThan, "price", "50"))
+				.setSorts(List.of(new SortExpression("name")));
+
+			final SearchDTO.SearchRs<Food> searchRs = SearchUtil.search(foodRepository, searchRq, false, Function.identity());
+			assertEquals(4, searchRs.getResult().size());
+			assertEquals(5, searchRs.getTotalCount());
 		}
 	}
 }

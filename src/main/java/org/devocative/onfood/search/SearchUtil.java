@@ -12,10 +12,11 @@ public class SearchUtil {
 	public static <E, D> SearchDTO.SearchRs<D> search(
 		JpaSpecificationExecutor<E> repository,
 		SearchDTO.SearchRq searchRq,
+		Boolean calcTotal,
 		Function<E, D> entityToDTO) {
 
 		final SearchSpecification<E> specification = new SearchSpecification<>(searchRq.getFilter(), searchRq.getSorts(), searchRq.getDistinct());
-		final Page<E> page = repository.findAll(specification, new PageRequest(searchRq.getStartIndex(), searchRq.getCount()));
+		final Page<E> page = repository.findAll(specification, new PageRequest(searchRq.getStartIndex(), searchRq.getCount(), calcTotal));
 
 		return new SearchDTO.SearchRs<>(
 			page.getContent().stream().map(entityToDTO).collect(Collectors.toList()),
