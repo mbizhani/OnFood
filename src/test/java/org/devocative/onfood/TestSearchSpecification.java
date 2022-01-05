@@ -2,7 +2,6 @@ package org.devocative.onfood;
 
 import lombok.extern.slf4j.Slf4j;
 import org.devocative.onfood.dto.SearchDTO;
-import org.devocative.onfood.model.EStatus;
 import org.devocative.onfood.model.Food;
 import org.devocative.onfood.model.Restaurant;
 import org.devocative.onfood.repository.IFoodRepository;
@@ -17,7 +16,6 @@ import org.devocative.onfood.search.expression.comparison.RangeValueComparisonEx
 import org.devocative.onfood.search.expression.comparison.SingleValueComparisonExpression;
 import org.devocative.onfood.search.expression.logical.MultiOperandLogicalExpression;
 import org.devocative.onfood.search.expression.logical.SingleOperandLogicalExpression;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,45 +52,6 @@ public class TestSearchSpecification {
 
 	@Autowired
 	private IFoodRepository foodRepository;
-
-	@BeforeEach
-	public void init() {
-		final Restaurant blackJoe = restaurantRepository.saveAndFlush(new Restaurant()
-			.setName("Black Joe")
-			.setRate(2.5f)
-			.setStatus(EStatus.Open)
-			.setOpeningDate(LocalDate.of(2019, Month.JANUARY, 1))
-			.setStartTime(LocalTime.of(10, 0))
-			.setCloseTime(LocalTime.of(0, 0)));
-		final Restaurant blackJungle = restaurantRepository.saveAndFlush(new Restaurant()
-			.setName("Black Jungle")
-			.setRate(3f)
-			.setStatus(EStatus.Open)
-			.setOpeningDate(LocalDate.of(2019, Month.FEBRUARY, 1)));
-		restaurantRepository.saveAndFlush(new Restaurant()
-			.setName("Kenzo")
-			.setRate(2f)
-			.setStatus(EStatus.Closed)
-			.setOpeningDate(LocalDate.of(2017, Month.APRIL, 11)));
-		final Restaurant milano = restaurantRepository.saveAndFlush(new Restaurant()
-			.setName("Milano")
-			.setStartTime(LocalTime.of(11, 30)));
-
-		foodRepository.saveAllAndFlush(Arrays.asList(
-			new Food().setName("Pizza 1").setPrice(100).setRestaurant(blackJoe),
-			new Food().setName("Burger").setPrice(50).setRestaurant(blackJoe),
-			new Food().setName("Roast Beef").setPrice(60).setRestaurant(blackJoe),
-			new Food().setName("Chicken Burger").setPrice(50).setRestaurant(blackJoe),
-			new Food().setName("Chicken Salad").setPrice(30).setRestaurant(blackJoe),
-
-			new Food().setName("Chicken Pasta").setPrice(120).setRestaurant(blackJungle),
-			new Food().setName("Alfredo").setPrice(75).setRestaurant(blackJungle),
-			new Food().setName("Beef Alfredo").setPrice(85).setRestaurant(blackJungle),
-			new Food().setName("Green Salad").setPrice(40).setRestaurant(blackJungle),
-
-			new Food().setName("Chicken").setPrice(70).setRestaurant(milano)
-		));
-	}
 
 	@Test
 	public void testExpressions() {
@@ -183,7 +140,7 @@ public class TestSearchSpecification {
 			notIn.forEach(restaurant -> log.info("** status notIn ?: {}", restaurant));
 
 			assertEquals(not_in.size(), notIn.size());
-			assertEquals(2, notIn.size());
+			assertEquals(3, notIn.size());
 			assertEquals(not_in.get(0), notIn.get(0));
 			assertEquals(not_in.get(1), notIn.get(1));
 		}

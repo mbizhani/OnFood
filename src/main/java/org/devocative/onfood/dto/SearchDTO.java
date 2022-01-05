@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import org.devocative.onfood.search.SortExpression;
 import org.devocative.onfood.search.expression.ABooleanExpression;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -25,8 +26,13 @@ public abstract class SearchDTO {
 		@Min(1)
 		private Integer count;
 
+		@NotNull
 		private Boolean distinct = Boolean.FALSE;
+
+		@Valid
 		private ABooleanExpression<?> filter;
+
+		@Valid
 		private List<SortExpression> sorts;
 	}
 

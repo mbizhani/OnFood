@@ -6,16 +6,17 @@ import lombok.Setter;
 import lombok.ToString;
 import org.devocative.onfood.search.expression.ABooleanExpression;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class SingleValueComparisonExpression extends ABooleanExpression<ComparisonOperator.ESingleValue> {
-	@NotEmpty
+	@NotBlank
 	private String property;
-	@NotEmpty
+
+	@NotBlank
 	private String value;
 
 	public SingleValueComparisonExpression(ComparisonOperator.ESingleValue operator, String property, String value) {

@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,8 +17,10 @@ public class SortExpression {
 		Asc, Desc
 	}
 
-	@NotEmpty
+	@NotBlank
 	private String property;
+
+	@NotNull
 	private EMode mode = EMode.Asc;
 
 	// ------------------------------

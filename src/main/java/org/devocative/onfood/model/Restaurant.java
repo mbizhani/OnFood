@@ -34,7 +34,7 @@ public class Restaurant {
 	@Column(name = "n_rate")
 	private Float rate;
 
-	@Column(name = "e_status")
+	@Column(name = "e_status", nullable = false)
 	private EStatus status;
 
 	@Column(name = "d_opening_date")

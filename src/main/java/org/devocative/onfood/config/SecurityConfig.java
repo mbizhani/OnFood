@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/restaurateurs/registrations",
 				"/api/restaurateurs/registrations/*",
 				"/api/restaurateurs/logins",
+				"/api/foods/searches",
 				"/api/j4d/registrations/*",
 				"/actuator/**",
 				"/swagger-resources/**",

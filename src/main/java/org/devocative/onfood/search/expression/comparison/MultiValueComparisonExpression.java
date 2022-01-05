@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.devocative.onfood.search.expression.ABooleanExpression;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class MultiValueComparisonExpression extends ABooleanExpression<ComparisonOperator.EMultiValue> {
-	@NotEmpty
+	@NotBlank
 	private String property;
+
 	@NotEmpty
 	private List<String> values;
 

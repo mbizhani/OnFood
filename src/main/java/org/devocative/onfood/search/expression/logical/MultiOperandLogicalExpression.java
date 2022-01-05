@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.devocative.onfood.search.expression.ABooleanExpression;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,6 +17,9 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class MultiOperandLogicalExpression extends ABooleanExpression<LogicalOperator.EMultiOperand> {
+	@Valid
+	@NotNull
+	@Size(min = 2)
 	private List<ABooleanExpression<?>> operands;
 
 	public MultiOperandLogicalExpression(LogicalOperator.EMultiOperand operator, ABooleanExpression<?>... operands) {

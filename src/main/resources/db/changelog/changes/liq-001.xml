@@ -44,7 +44,9 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="n_rate" type="FLOAT"/>
-			<column name="e_status" type="NUMBER(10, 0)"/>
+			<column name="e_status" type="NUMBER(10, 0)">
+				<constraints nullable="false"/>
+			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="mehdi (generated)" id="1632836580784-3">

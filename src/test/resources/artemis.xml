@@ -204,4 +204,35 @@
 		</get>
 	</scenario>
 
+	<scenario name="SearchFood">
+		<post url="/foods/searches">
+			<body><![CDATA[
+{
+	"startIndex": 1,
+	"count": 4,
+	"filter": {
+		"operator": "And",
+		"operands": [
+			{
+				"operator": "GreaterThan",
+				"property": "price",
+				"value": "50"
+			},
+			{
+				"operator": "GreaterThanEqual",
+				"property": "restaurant.rate",
+				"value": "3"
+			}
+		]
+	},
+	"sorts": [
+		{"property": "name"}
+	]
+}
+			]]></body>
+
+			<assertRs status="200" properties="result,totalCount"/>
+		</post>
+	</scenario>
+
 </artemis>

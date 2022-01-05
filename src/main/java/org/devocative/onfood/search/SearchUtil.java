@@ -12,6 +12,13 @@ public class SearchUtil {
 	public static <E, D> SearchDTO.SearchRs<D> search(
 		JpaSpecificationExecutor<E> repository,
 		SearchDTO.SearchRq searchRq,
+		Function<E, D> entityToDTO) {
+		return search(repository, searchRq, false, entityToDTO);
+	}
+
+	public static <E, D> SearchDTO.SearchRs<D> search(
+		JpaSpecificationExecutor<E> repository,
+		SearchDTO.SearchRq searchRq,
 		Boolean calcTotal,
 		Function<E, D> entityToDTO) {
 
