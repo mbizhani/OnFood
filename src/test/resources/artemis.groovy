@@ -39,3 +39,11 @@ def assertRs_updateProfile(Context ctx, Map rsBody) {
 	assertNotNull(rsBody.lastModifiedDate)
 	assertEquals(1, rsBody.version)
 }
+
+def assertRs_searchByPriceRate(Context ctx, Map rsBody) {
+	assertEquals(3, rsBody.totalCount)
+
+	List<Map> result = rsBody.result
+	assertEquals("Beef Alfredo", result[0].name)
+	assertEquals("Chicken Pasta", result[1].name)
+}

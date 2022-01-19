@@ -205,7 +205,7 @@
 	</scenario>
 
 	<scenario name="SearchFood">
-		<post url="/foods/searches">
+		<post id="searchByPriceRate" url="/foods/searches">
 			<body><![CDATA[
 {
 	"startIndex": 1,
@@ -231,7 +231,7 @@
 }
 			]]></body>
 
-			<assertRs status="200" properties="result,totalCount"/>
+			<assertRs status="200" properties="result,totalCount" call="true"/>
 		</post>
 	</scenario>
 
