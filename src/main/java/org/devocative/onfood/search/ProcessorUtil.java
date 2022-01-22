@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public abstract class Processors {
+public abstract class ProcessorUtil {
 	private static final Map<Class<? extends ABooleanExpression<?>>, IBooleanProcessor> PROCESSORS =
 		new ConcurrentHashMap<>();
 

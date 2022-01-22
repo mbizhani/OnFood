@@ -33,14 +33,14 @@ public class SearchSpecification<T> implements Specification<T> {
 		if (sorts != null && !sorts.isEmpty()) {
 			final List<Order> orders = sorts.stream()
 				.map(sort -> sort.getMode() == Asc ?
-					builder.asc(Processors.findPath(root, sort.getProperty())) :
-					builder.desc(Processors.findPath(root, sort.getProperty())))
+					builder.asc(ProcessorUtil.findPath(root, sort.getProperty())) :
+					builder.desc(ProcessorUtil.findPath(root, sort.getProperty())))
 				.collect(Collectors.toList());
 			query.orderBy(orders);
 		}
 
 		query.distinct(distinct);
 
-		return expression != null ? Processors.process(expression, root, builder) : null;
+		return expression != null ? ProcessorUtil.process(expression, root, builder) : null;
 	}
 }

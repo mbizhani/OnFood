@@ -8,8 +8,8 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import static org.devocative.onfood.search.Processors.convertSingleValue;
-import static org.devocative.onfood.search.Processors.findPath;
+import static org.devocative.onfood.search.ProcessorUtil.convertSingleValue;
+import static org.devocative.onfood.search.ProcessorUtil.findPath;
 
 public class SingleValueComparisonProcessor implements IBooleanProcessor<SingleValueComparisonExpression> {
 

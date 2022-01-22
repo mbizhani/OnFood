@@ -1,6 +1,6 @@
 package org.devocative.onfood.search.processor.logical;
 
-import org.devocative.onfood.search.Processors;
+import org.devocative.onfood.search.ProcessorUtil;
 import org.devocative.onfood.search.expression.logical.MultiOperandLogicalExpression;
 import org.devocative.onfood.search.processor.IBooleanProcessor;
 
@@ -13,7 +13,7 @@ public class MultiOperandLogicalProcessor implements IBooleanProcessor<MultiOper
 	@Override
 	public Predicate process(MultiOperandLogicalExpression expression, Root<?> root, CriteriaBuilder builder) {
 		final Predicate[] predicates = expression.getOperands().stream()
-			.map(expr -> Processors.process(expr, root, builder))
+			.map(expr -> ProcessorUtil.process(expr, root, builder))
 			.toArray(Predicate[]::new);
 
 		switch (expression.getOperator()) {

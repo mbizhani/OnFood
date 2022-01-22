@@ -9,8 +9,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-import static org.devocative.onfood.search.Processors.convertListValue;
-import static org.devocative.onfood.search.Processors.findPath;
+import static org.devocative.onfood.search.ProcessorUtil.convertListValue;
+import static org.devocative.onfood.search.ProcessorUtil.findPath;
 
 public class MultiValueComparisonProcessor implements IBooleanProcessor<MultiValueComparisonExpression> {
 

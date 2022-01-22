@@ -1,6 +1,6 @@
 package org.devocative.onfood.search.processor.logical;
 
-import org.devocative.onfood.search.Processors;
+import org.devocative.onfood.search.ProcessorUtil;
 import org.devocative.onfood.search.expression.logical.SingleOperandLogicalExpression;
 import org.devocative.onfood.search.processor.IBooleanProcessor;
 
@@ -14,7 +14,7 @@ public class SingleOperandLogicalProcessor implements IBooleanProcessor<SingleOp
 	public Predicate process(SingleOperandLogicalExpression expression, Root<?> root, CriteriaBuilder builder) {
 		switch (expression.getOperator()) {
 			case Not:
-				return builder.not(Processors.process(expression.getOperand(), root, builder));
+				return builder.not(ProcessorUtil.process(expression.getOperand(), root, builder));
 			default:
 				throw new RuntimeException("Invalid LogicalOperator.ESingleOperand: " + expression.getOperator());
 		}
