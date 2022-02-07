@@ -117,6 +117,7 @@ public class OnFoodControllerAdvice {
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<ErrorDTO.GeneralRs> handleAccessDeniedException(AccessDeniedException ex) {
+		log.warn("@ControllerAdvice - AccessDenied");
 		return new ResponseEntity<>(new ErrorDTO.GeneralRs("AccessDenied"), HttpStatus.FORBIDDEN);
 	}
 

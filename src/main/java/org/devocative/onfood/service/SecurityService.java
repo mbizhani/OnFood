@@ -11,7 +11,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -25,14 +30,16 @@ public class SecurityService implements ISecurityService {
 
 	@Override
 	public void authenticateByToken(String token) {
-		final Claims claims = Jwts.parser()
-			.setSigningKey(key)
-			.parseClaimsJws(token)
-			.getBody();
-
-		final Date expirationDate = assertValue(claims.getExpiration(), "Invalid Token: No Expiration Claim");
-		if (expirationDate.before(new Date())) {
-			throw new BadCredentialsException("Expired Token: " + claims.getExpiration());
+		final Claims claims;
+		try {
+			claims = Jwts.parser()
+				.setSigningKey(key)
+				.parseClaimsJws(token)
+				.getBody();
+		} catch (Exception e) {
+			log.warn("SecurityService.authenticateByToken - JWT Parse: ({}) {}",
+				e.getClass().getSimpleName(), e.getMessage());
+			return;
 		}
 
 		final Long userId = assertValue(claims.get(USER_ID_CLAIM, Long.class), "Invalid Token: No UID");
@@ -50,18 +57,19 @@ public class SecurityService implements ISecurityService {
 		claims.put(USER_ID_CLAIM, userId);
 		claims.put(ROLE_CLAIM, role);
 
-		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR, 1);
+		final Date expiration = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
 
-		setSecurityContext(username, userId, role);
-
-		return Jwts.builder()
+		final String jwtToken = Jwts.builder()
 			.setClaims(claims)
 			.setSubject(username)
 			.setIssuedAt(new Date())
-			.setExpiration(cal.getTime())
+			.setExpiration(expiration)
 			.signWith(SignatureAlgorithm.HS512, key)
 			.compact();
+
+		setSecurityContext(username, userId, role);
+
+		return jwtToken;
 	}
 
 	// ------------------------------

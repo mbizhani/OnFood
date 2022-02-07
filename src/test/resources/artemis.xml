@@ -92,7 +92,12 @@
 		</put>
 
 
-		<!-- Assert Unauthorized/Forbidden -->
+		<!--
+			Assert Unauthorized/Forbidden:
+
+			- 401: without/invalid JWT
+			- 403: valid JWT, invalid access
+		-->
 
 		<get url="/restaurateurs/${register.rs.userId - 1}">
 			<headers>
@@ -103,11 +108,20 @@
 		</get>
 
 		<get url="/restaurateurs/${register.rs.userId}">
-			<assertRs status="403" properties="code"/>
+			<headers>
+				<header name="Authorization"
+				        value="eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjY4LCJzdWIiOiIwOTI5MDM3MzU0NSIsInJvbGUiOiJSZXN0YXVyYXRldXIiLCJleHAiOjE2NDQyMjg2NTAsImlhdCI6MTY0NDIyNTA1MH0.RaZegdMvO1unL3CM-Wir7jtqrP_0LiGHHw3sRwGOqY3oKKWMv6TSQHwoe_tuLPvLpF6ezp_9E7Fe1wITyVW40w"/>
+			</headers>
+
+			<assertRs status="401" properties="code"/>
+		</get>
+
+		<get url="/restaurateurs/${register.rs.userId}">
+			<assertRs status="401" properties="code"/>
 		</get>
 
 		<get url="/restaurateurs/9999999999">
-			<assertRs status="403" properties="code"/>
+			<assertRs status="401" properties="code"/>
 		</get>
 	</scenario>
 

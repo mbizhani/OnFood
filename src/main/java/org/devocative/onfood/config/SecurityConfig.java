@@ -1,6 +1,7 @@
 package org.devocative.onfood.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.devocative.onfood.model.AuditedUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableWebSecurity
@@ -63,12 +65,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			// TIP: By default, HttpServletResponse.SC_FORBIDDEN is sent!
 			//.exceptionHandling().authenticationEntryPoint((rq, rs, e) -> rs.sendError(HttpServletResponse.SC_UNAUTHORIZED))
 			.exceptionHandling().authenticationEntryPoint((rq, rs, e) -> {
+				log.warn("ExceptionHandling -> AuthenticationEntryPoint: {}", e.getMessage());
+
 				rs.setContentType("application/json");
 				rs.setCharacterEncoding("UTF-8");
-				rs.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
+				rs.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				final PrintWriter writer = rs.getWriter();
-				writer.write("{\"code\": \"AccessDenied\"}");
+				writer.write("{\"code\": \"InvalidAuthentication\"}");
 				writer.flush();
 			})
 			.and()
