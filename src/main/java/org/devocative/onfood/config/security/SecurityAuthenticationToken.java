@@ -1,4 +1,4 @@
-package org.devocative.onfood.config;
+package org.devocative.onfood.config.security;
 
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -7,11 +7,11 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 @Getter
-public class JwtAuthenticationToken extends AbstractAuthenticationToken {
+public class SecurityAuthenticationToken extends AbstractAuthenticationToken {
 	private final String username;
 	private final Long userId;
 
-	public JwtAuthenticationToken(String username, Long userId, Collection<? extends GrantedAuthority> authorities) {
+	public SecurityAuthenticationToken(String username, Long userId, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.username = username;
 		this.userId = userId;

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
-public class OnFoodControllerAdvice {
+public class ExceptionHandlerControllerAdvice {
 	private final Map<String, ErrorDTO.GeneralRs> uniqueConstraintErrors = new HashMap<>();
 
 	@PostConstruct

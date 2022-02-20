@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.devocative.onfood.config.JwtAuthenticationToken;
+import org.devocative.onfood.config.security.SecurityAuthenticationToken;
 import org.devocative.onfood.iservice.ISecurityService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -82,7 +82,7 @@ public class SecurityService implements ISecurityService {
 	}
 
 	private void setSecurityContext(String username, Long userId, String role) {
-		final JwtAuthenticationToken authToken = new JwtAuthenticationToken(
+		final SecurityAuthenticationToken authToken = new SecurityAuthenticationToken(
 			username,
 			userId,
 			Collections.singletonList(new SimpleGrantedAuthority(role)));

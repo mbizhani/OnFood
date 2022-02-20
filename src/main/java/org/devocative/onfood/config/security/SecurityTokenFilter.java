@@ -1,4 +1,4 @@
-package org.devocative.onfood.config;
+package org.devocative.onfood.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +15,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class JwtFilter extends OncePerRequestFilter {
+public class SecurityTokenFilter extends OncePerRequestFilter {
 	private final ISecurityService securityService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest rq, HttpServletResponse rs, FilterChain chain) throws ServletException, IOException {
 		final String authorization = rq.getHeader("Authorization");
 		if (authorization != null) {
-			log.debug("JwtFilter: uri=[{}] token=[{}]", rq.getRequestURI(), authorization);
+			log.debug("SecurityTokenFilter: uri=[{}] token=[{}]", rq.getRequestURI(), authorization);
 			securityService.authenticateByToken(authorization);
 		}
 		chain.doFilter(rq, rs);

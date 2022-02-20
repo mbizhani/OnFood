@@ -1,11 +1,8 @@
-package org.devocative.onfood.config;
+package org.devocative.onfood.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.devocative.onfood.model.AuditedUser;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,29 +10,19 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final AuditedUser ANONYMOUS = new AuditedUser(-1L, "anonymous");
-
-	private final JwtFilter jwtFilter;
+	private final SecurityTokenFilter tokenFilter;
 
 	// ------------------------------
 
@@ -77,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	// [3]
@@ -89,31 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	// ------------------------------
 
 	@Bean
-	public AuditorAware<AuditedUser> auditorAware() {
-		//TIP: AnonymousAuthenticationToken [Principal=anonymousUser, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=null], Granted Authorities=[ROLE_ANONYMOUS]]
-
-		return () -> {
-			final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (auth instanceof JwtAuthenticationToken) {
-				JwtAuthenticationToken jwt = (JwtAuthenticationToken) auth;
-				return Optional.of(new AuditedUser(jwt.getUserId(), jwt.getUsername()));
-			}
-			return Optional.of(ANONYMOUS);
-		};
-	}
-
-	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public Docket swaggerDocket() {
-		return new Docket(DocumentationType.OAS_30)
-			.groupName("OnFood-API")
-			.select()
-			.apis(RequestHandlerSelectors.basePackage("org.devocative.onfood"))
-			.paths(PathSelectors.any())
-			.build();
 	}
 }
