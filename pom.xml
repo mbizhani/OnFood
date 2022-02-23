@@ -21,6 +21,7 @@
 		<java.version>11</java.version>
 		<d.mapstruct>1.4.2.Final</d.mapstruct>
 		<d.swagger.version>3.0.0</d.swagger.version>
+		<d.artemis>1.3-SNAPSHOT</d.artemis>
 
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
 	</properties>
@@ -77,14 +78,13 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${d.mapstruct}</version>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -138,7 +138,7 @@
 		<dependency>
 			<groupId>org.devocative.artemis</groupId>
 			<artifactId>artemis-core</artifactId>
-			<version>1.2</version>
+			<version>${d.artemis}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -173,9 +173,11 @@
 			<plugin>
 				<groupId>org.devocative.artemis</groupId>
 				<artifactId>artemis-maven-plugin</artifactId>
-				<version>1.2</version>
+				<version>${d.artemis}</version>
 				<configuration>
 					<baseUrl>http://localhost:8080/api</baseUrl>
+					<xmlName>artemis-cookie</xmlName>
+					<groovyName>artemis</groovyName>
 				</configuration>
 			</plugin>
 
@@ -184,6 +186,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<annotationProcessorPaths>
+						<path>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-configuration-processor</artifactId>
+							<version>2.5.7</version>
+						</path>
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>

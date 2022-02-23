@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE artemis PUBLIC "-//Devocative.Org//Artemis 1.0//EN"
+		"https://devocative.org/dtd/artemis-1.0.dtd">
+
+<artemis>
+
+	<vars>
+		<var name="cell" value="09${_.generate(9, '0'..'9')}"/>
+		<var name="firstName" value="${_.generate(4, 'a'..'z')}"/>
+		<var name="lastName" value="${_.generate(4, 'a'..'z')}"/>
+		<!-- "password" is generated in before() -->
+	</vars>
+
+	<scenario name="RegisterRestaurateur">
+		<get url="/restaurateurs/registrations/${cell}">
+			<assertRs status="200" body="empty"/>
+		</get>
+
+		<get url="/j4d/registrations/${cell}">
+			<assertRs status="200" properties="code"/>
+		</get>
+
+		<post id="register" url="/restaurateurs/registrations">
+			<body><![CDATA[
+{
+    "firstName": "${firstName}",
+    "lastName": "${lastName}",
+    "cell": "${cell}",
+    "code": "${_prev.rs.code}",
+    "password": "${password}",
+    "birthDate": {
+        "year": 1360,
+        "month": 6,
+        "day": 2
+    }
+}
+            ]]></body>
+
+			<assertRs status="200" properties="userId" call="true"/>
+		</post>
+
+		<get id="profile" url="/restaurateurs/${register.rs.userId}">
+			<!--<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>-->
+
+			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version" call="true"/>
+		</get>
+
+		<put id="updateProfile" url="/restaurateurs/${register.rs.userId}">
+			<!--<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>-->
+
+			<body><![CDATA[
+{
+    "firstName": "${firstName}-UP",
+    "lastName": "${lastName}-UP",
+    "cell": "${cell}",
+    "birthDate": {
+        "year": 1360,
+        "month": 2,
+        "day": 6
+    },
+    "version": 0
+}
+            ]]></body>
+
+			<assertRs status="200"
+			          properties="id,firstName,lastName,cell,createdBy,createdDate,lastModifiedBy,lastModifiedDate,version"
+			          call="true"/>
+		</put>
+
+		<!-- Assert ObjectOptimisticLockingFailure -->
+
+		<put url="/restaurateurs/${register.rs.userId}">
+			<!--<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>-->
+
+			<body><![CDATA[
+{
+    "firstName": "${firstName}-UP2",
+    "lastName": "${lastName}-UP2",
+    "cell": "${cell}",
+    "version": 0
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code"/>
+		</put>
+
+
+		<!--
+			Assert Unauthorized/Forbidden:
+
+			- 401: without/invalid JWT
+			- 403: valid JWT, invalid access
+		-->
+
+		<get url="/restaurateurs/${register.rs.userId - 1}">
+			<!--<headers>
+				<header name="Authorization" value="${register.rs.token}"/>
+			</headers>-->
+
+			<assertRs status="403" properties="code"/>
+		</get>
+
+		<!--<get url="/restaurateurs/${register.rs.userId}">
+			<headers>
+				<header name="Authorization"
+				        value="eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjY4LCJzdWIiOiIwOTI5MDM3MzU0NSIsInJvbGUiOiJSZXN0YXVyYXRldXIiLCJleHAiOjE2NDQyMjg2NTAsImlhdCI6MTY0NDIyNTA1MH0.RaZegdMvO1unL3CM-Wir7jtqrP_0LiGHHw3sRwGOqY3oKKWMv6TSQHwoe_tuLPvLpF6ezp_9E7Fe1wITyVW40w"/>
+			</headers>
+
+			<assertRs status="401" properties="code"/>
+		</get>
+
+		<get url="/restaurateurs/${register.rs.userId}">
+			<assertRs status="401" properties="code"/>
+		</get>-->
+
+		<get url="/restaurateurs/9999999999">
+			<assertRs status="403" properties="code"/>
+		</get>
+	</scenario>
+
+	<scenario name="RegisterRestaurateur-DuplicateError">
+		<get url="/restaurateurs/registrations/${cell}">
+			<assertRs status="200" body="empty"/>
+		</get>
+
+		<get url="/j4d/registrations/${cell}">
+			<assertRs status="200" properties="code"/>
+		</get>
+
+		<post url="/restaurateurs/registrations" id="register">
+			<body><![CDATA[
+{
+    "firstName": "${firstName}",
+    "lastName": "${lastName}",
+    "cell": "${cell}",
+    "code": "${_prev.rs.code}",
+    "password": "${password}"
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code,fields"/>
+		</post>
+	</scenario>
+
+	<scenario name="RegisterRestaurateur-Validation">
+		<get url="/restaurateurs/registrations/${cell}">
+			<assertRs status="200" body="empty"/>
+		</get>
+
+		<get url="/j4d/registrations/${cell}">
+			<assertRs status="200" properties="code"/>
+		</get>
+
+		<post url="/restaurateurs/registrations">
+			<body><![CDATA[
+{
+	"cell": "${cell}",
+    "code": "${_prev.rs.code}",
+    "password": "${password}",
+    "email": "email.com"
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code,fields"/>
+			<!-- Error Response: javax.validation.ConstraintViolationException
+			{
+			  "code":"InputValidationError",
+			  "fields":[{"field":"lastName","code":"NotNull"},{"field":"email","code":"Email"},{"field":"firstName","code":"NotNull"}]
+			}
+			-->
+		</post>
+
+		<post url="/restaurateurs/registrations">
+			<body><![CDATA[
+{
+    "firstName": "${firstName}",
+    "lastName": "${lastName}"
+}
+            ]]></body>
+
+			<assertRs status="400" properties="code,fields"/>
+			<!-- Error Response: org.springframework.web.bind.MethodArgumentNotValidException
+			{
+			  "code":"InputValidationError",
+			  "fields":[{"field":"password","code":"NotNull"},{"field":"code","code":"NotNull"},{"field":"cell","code":"NotNull"}]
+			}
+			-->
+		</post>
+
+	</scenario>
+
+	<scenario name="LoginRestaurateur">
+
+		<post id="login" url="/restaurateurs/logins">
+			<body><![CDATA[
+{
+	"cell": "${cell}",
+	"password": "${password}"
+}
+			]]></body>
+
+			<assertRs status="200" properties="userId,token"/>
+		</post>
+
+		<get url="/restaurateurs/${login.rs.userId}">
+			<!--<headers>
+				<header name="Authorization" value="${login.rs.token}"/>
+			</headers>-->
+
+			<assertRs status="200" properties="id,firstName,lastName,cell,createdBy,createdDate,version"/>
+		</get>
+	</scenario>
+
+	<scenario name="SearchFood">
+		<post id="searchByPriceRate" url="/foods/searches">
+			<body><![CDATA[
+{
+	"startIndex": 1,
+	"count": 4,
+	"filter": {
+		"operator": "And",
+		"operands": [
+			{
+				"operator": "GreaterThan",
+				"property": "price",
+				"value": "50"
+			},
+			{
+				"operator": "GreaterThanEqual",
+				"property": "restaurant.rate",
+				"value": "3"
+			}
+		]
+	},
+	"sorts": [
+		{"property": "name"}
+	]
+}
+			]]></body>
+
+			<assertRs status="200" properties="result,totalCount" call="true"/>
+		</post>
+	</scenario>
+
+</artemis>

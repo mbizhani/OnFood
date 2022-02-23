@@ -66,7 +66,7 @@ public class RestaurateurService implements IRestaurateurService {
 			log.info("Registered Restaurateur: {}", restaurateur);
 
 			return new RestaurateurDTO.RegisterRs(restaurateur.getId(),
-				securityService.generateToken(
+				securityService.createToken(
 					restaurateur.getCell(),
 					restaurateur.getId(),
 					ISecurityService.RESTAURATEUR_ROLE));
@@ -97,7 +97,7 @@ public class RestaurateurService implements IRestaurateurService {
 		if (passwordEncoder.matches(loginRq.getPassword(), restaurateur.getPassword())) {
 			return new RestaurateurDTO.LoginRs(
 				restaurateur.getId(),
-				securityService.generateToken(loginRq.getCell(), restaurateur.getId(), ISecurityService.RESTAURATEUR_ROLE));
+				securityService.createToken(loginRq.getCell(), restaurateur.getId(), ISecurityService.RESTAURATEUR_ROLE));
 		} else {
 			throw new OnFoodException(RestaurateurErrorCode.InvalidCellOrPassword);
 		}

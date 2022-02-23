@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final SecurityTokenFilter tokenFilter;
+	//private final SecurityTokenContextRepository repository;
 
 	// ------------------------------
 
@@ -62,7 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				writer.flush();
 			})
 			.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		// TIP: use `securityContextRepository` instead of `tokenFilter`, and vice versa
+		//.and()
+		//.securityContext().securityContextRepository(repository)
+		;
 
 		http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 	}

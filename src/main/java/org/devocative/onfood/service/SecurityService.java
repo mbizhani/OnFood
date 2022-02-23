@@ -8,6 +8,7 @@ import org.devocative.onfood.config.security.SecurityAuthenticationToken;
 import org.devocative.onfood.iservice.ISecurityService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,11 @@ public class SecurityService implements ISecurityService {
 
 	@Override
 	public void authenticateByToken(String token) {
+		authenticateByToken(token, SecurityContextHolder.getContext());
+	}
+
+	@Override
+	public void authenticateByToken(String token, SecurityContext context) {
 		final Claims claims;
 		try {
 			claims = Jwts.parser()
@@ -44,15 +50,21 @@ public class SecurityService implements ISecurityService {
 
 		final Long userId = assertValue(claims.get(USER_ID_CLAIM, Long.class), "Invalid Token: No UID");
 		final String role = assertValue(claims.get(ROLE_CLAIM, String.class), "Invalid Token: No Role");
-		final String subject = assertValue(claims.getSubject(), "Invalid Token: No Subject");
+		final String username = assertValue(claims.getSubject(), "Invalid Token: No Subject");
 
-		log.debug("AuthenticateByToken: userId=[{}] subject=[{}] role=[{}]", userId, subject, role);
+		log.debug("AuthenticateByToken: userId=[{}] username=[{}] role=[{}]", userId, username, role);
 
-		setSecurityContext(subject, userId, role);
+		final SecurityAuthenticationToken authToken = new SecurityAuthenticationToken(
+			token,
+			username,
+			userId,
+			Collections.singletonList(new SimpleGrantedAuthority(role)));
+
+		context.setAuthentication(authToken);
 	}
 
 	@Override
-	public String generateToken(String username, Long userId, String role) {
+	public String createToken(String username, Long userId, String role) {
 		final Map<String, Object> claims = new HashMap<>();
 		claims.put(USER_ID_CLAIM, userId);
 		claims.put(ROLE_CLAIM, role);
@@ -67,7 +79,13 @@ public class SecurityService implements ISecurityService {
 			.signWith(SignatureAlgorithm.HS512, key)
 			.compact();
 
-		setSecurityContext(username, userId, role);
+		final SecurityAuthenticationToken authToken = new SecurityAuthenticationToken(
+			jwtToken,
+			username,
+			userId,
+			Collections.singletonList(new SimpleGrantedAuthority(role)));
+
+		SecurityContextHolder.getContext().setAuthentication(authToken);
 
 		return jwtToken;
 	}
@@ -79,13 +97,5 @@ public class SecurityService implements ISecurityService {
 			throw new BadCredentialsException(message);
 		}
 		return val;
-	}
-
-	private void setSecurityContext(String username, Long userId, String role) {
-		final SecurityAuthenticationToken authToken = new SecurityAuthenticationToken(
-			username,
-			userId,
-			Collections.singletonList(new SimpleGrantedAuthority(role)));
-		SecurityContextHolder.getContext().setAuthentication(authToken);
 	}
 }
