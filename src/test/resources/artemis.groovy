@@ -1,4 +1,5 @@
 import org.devocative.artemis.Context
+import org.devocative.artemis.http.HttpRequestData
 
 import static org.junit.jupiter.api.Assertions.*
 
@@ -7,6 +8,13 @@ def before(Context ctx) {
 	def encPass = Base64.getEncoder().withoutPadding().encodeToString(password.getBytes())
 	ctx.addVar("password", encPass)
 	Artemis.log("Password: main=${password} enc=${encPass}")
+
+	ctx.config.beforeSend = { HttpRequestData data ->
+		if (data.body != null) {
+			data.headers["X-Body-Format"] = "base64"
+			data.body = Artemis.encBase64(data.body)
+		}
+	}
 }
 
 def generate(int n, List<String>... alphaSet) {

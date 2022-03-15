@@ -37,7 +37,7 @@
 }
             ]]></body>
 
-			<assertRs status="200" properties="userId" call="true"/>
+			<assertRs status="200" properties="userId" cookies="token" call="true"/>
 		</post>
 
 		<get id="profile" url="/restaurateurs/${register.rs.userId}">
