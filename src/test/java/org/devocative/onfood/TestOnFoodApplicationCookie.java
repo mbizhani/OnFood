@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test-cookie")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OnFoodApplicationCookieTests {
+class TestOnFoodApplicationCookie {
 
 	@LocalServerPort
 	private int port;

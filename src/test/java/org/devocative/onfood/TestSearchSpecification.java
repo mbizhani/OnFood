@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @Transactional
-@ActiveProfiles("test")
+@ActiveProfiles("test-jwt")
 @SpringBootTest
 public class TestSearchSpecification {
 

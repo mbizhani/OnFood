@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test-jwt")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OnFoodApplicationJWTTests {
+class TestOnFoodApplicationJWT {
 
 	@LocalServerPort
 	private int port;

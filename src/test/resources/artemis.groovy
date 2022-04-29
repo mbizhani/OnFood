@@ -9,10 +9,12 @@ def before(Context ctx) {
 	ctx.addVar("password", encPass)
 	Artemis.log("Password: main=${password} enc=${encPass}")
 
-	ctx.config.beforeSend = { HttpRequestData data ->
-		if (data.body != null) {
-			data.headers["X-Body-Format"] = "base64"
-			data.body = Artemis.encBase64(data.body)
+	if (System.properties["groovy.send"] == "base64") {
+		ctx.config.beforeSend = { HttpRequestData data ->
+			if (data.body != null) {
+				data.headers["X-Body-Format"] = "base64"
+				data.body = Artemis.encBase64(data.body)
+			}
 		}
 	}
 }
