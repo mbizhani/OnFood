@@ -16,7 +16,7 @@ class TestOnFoodApplicationJWT {
 
 	@Test
 	void contextLoads() {
-		ArtemisExecutor.run(new Config("artemis-jwt", "artemis")
+		ArtemisExecutor.run(new Config("artemis")
 			.setBaseUrl(String.format("http://localhost:%s/api", port))
 		);
 	}
